@@ -1,13 +1,12 @@
 # Learn2Aid - Empowering Lifesavers
 
 ## Introduction
-<img align="right" src="app-logo2.png" alt="Learn2aid logo" width="300">
+
+<img align="right" src="frontend/learn2aid_frontend/lib/assets/app-logo2.png" alt="Learn2aid logo" width="300">
 
 - Learn2Aid is a cutting-edge mobile application developed by the University of Information Technology in Vietnam. In response to the urgent need for first aid knowledge, especially in busy and bustling cities across the APAC region, Learn2Aid aims to bridge the gap between bystanders and trained first responders. Emergencies happen every day, and many people are unprepared to help when it counts the most. Our solution empowers users to act with confidence, turning everyday people into lifesavers.
 
 - Leveraging AI technology, Learn2Aid makes learning first aid easy, interactive, and accessible for everyone. Whether you're at home, at work, or on the go, you can learn life-saving skills at your own pace. From practical video guides to real-time feedback through AI practice, we provide a seamless and engaging experience that helps users develop the skills needed to confidently respond in critical situations.
-
-
 
 ## Aim
 
@@ -30,3 +29,48 @@
 ## Contributing
 
 - We welcome contributions to Learn2Aid. If you'd like to help improve the application, please feel free to fork the repository and submit pull requests. Ensure your contributions are well-documented and tested before submitting.
+
+## Screenshots
+
+### Authentication
+
+<p align="center">
+  <img src="frontend/learn2aid_frontend/lib/assets/images/login.png" alt="Login Screen" width="150">
+  <img src="frontend/learn2aid_frontend/lib/assets/images/Google-login.png" alt="Google login Screen" width="150">
+</p>
+
+### Dashboard
+
+<p align="center">
+  <img src="frontend/learn2aid_frontend/lib/assets/images/dashboard.png" alt="Dashboard" width="150">
+  <img src="frontend/learn2aid_frontend/lib/assets/images/filter.png" alt="Filter" width="150">
+  <img src="frontend/learn2aid_frontend/lib/assets/images/video_lesson.png" alt="Video Lesson" width="150">
+  <img src="frontend/learn2aid_frontend/lib/assets/images/video.png" alt="video" width="150">
+  <img src="frontend/learn2aid_frontend/lib/assets/images/practice_with_ai.png" alt="Practice with AI" width="150">
+  <img src="frontend/learn2aid_frontend/lib/assets/images/grade.png" alt="Grade" width="150">
+  <img src="frontend/learn2aid_frontend/lib/assets/images/analysis-result.png" alt="Analysis Result" width="150">
+  <img src="frontend/learn2aid_frontend/lib/assets/images/analysis-result-2.png" alt="Analysis Result 2" width="150">
+</p>
+
+### Quiz
+
+<p align="center">
+  <img src="frontend/learn2aid_frontend/lib/assets/images/quizz-screen.png" alt="Quiz Screen" width="150">
+  <img src="frontend/learn2aid_frontend/lib/assets/images/quizz-attemp.png" alt="Quiz Attempt" width="150">
+  <img src="frontend/learn2aid_frontend/lib/assets/images/quiz-result-1.png" alt="Quiz Result 1" width="150">
+  <img src="frontend/learn2aid_frontend/lib/assets/images/quiz-result-2.png" alt="Quiz Result 2" width="150">
+</p>
+
+### Events
+
+<p align="center">
+  <img src="frontend/learn2aid_frontend/lib/assets/images/events-screen.png" alt="Events Screen" width="150">
+  <img src="frontend/learn2aid_frontend/lib/assets/images/events-screen-2.png" alt="Events Screen" width="150">
+</p>
+
+### Profile
+
+<p align="center">
+  <img src="frontend/learn2aid_frontend/lib/assets/images/profile-screen.png" alt="Profile Screen" width="150">
+  <img src="frontend/learn2aid_frontend/lib/assets/images/send-feedback-screen.png" alt="Send Feedback" width="150">
+</p>
