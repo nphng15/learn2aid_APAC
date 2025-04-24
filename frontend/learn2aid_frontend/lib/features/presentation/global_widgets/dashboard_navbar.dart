@@ -16,7 +16,9 @@ class DashboardNavBar extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
-            'Ứng dụng này chỉ mang tính tham khảo và hỗ trợ luyện tập, không thay thế đào tạo sơ cứu chính thức hoặc tư vấn y tế chuyên nghiệp. Hãy học và thực hành sơ cứu đúng cách càng sớm càng tốt.',
+            'This app is for reference and practice purposes only '
+            'and does not replace official first aid training or professional medical advice.'
+            'Learn and practice first aid correctly as soon as possible.',           
             style: TextStyle(
               fontSize: 11,
               color: Colors.grey.shade600,

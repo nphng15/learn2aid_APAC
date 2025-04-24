@@ -14,24 +14,24 @@ import 'package:learn2aid/features/presentation/modules/app_state_binding.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Khởi tạo Hive storage
+  // Initialize Hive storage
   await HiveStorageAdapter().init();
   
-  // Đăng ký AppStateRepository
+  // Register AppStateRepository
   Get.put<AppStateRepository>(
     AppStateRepositoryImpl(),
     permanent: true
   );
   
-  // Đảm bảo các use case được đăng ký
+  // Ensure use cases are registered
   AppStateBinding().dependencies();
   
-  // Khởi tạo Firebase
+  // Initialize Firebase
   await Firebase.initializeApp();
-  // Khởi tạo Firestore
+  // Initialize Firestore
   FirebaseFirestore.instance;
 
-  Get.put<AuthController>(AuthController(), permanent: true); // Sử dụng AuthController
+  Get.put<AuthController>(AuthController(), permanent: true); // Use AuthController
 
   runApp(
     MyApp()  
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // khong cho man hinh xoay ngang
+    // Prevent screen rotation
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.loading, // Chạy vào trang Loading trước
+      initialRoute: AppRoutes.loading, // Navigate to Loading page first
       getPages: AppPages.pages,
     );
   }

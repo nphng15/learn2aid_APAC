@@ -27,16 +27,16 @@ class DashboardSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Tiêu đề section
+          // Section title
           Text(
             title,
             style: const TextStyle(fontSize: 20, fontFamily: 'Lexend'),
           ),
           const SizedBox(height: 8),
           
-          // Nội dung video
+          // Video content
           Obx(() {
-            // Chọn danh sách video dựa vào loại section
+            // Select video list based on section type
             List<VideoModel> videos;
             bool isLoading = videoController.isLoading.value;
             
@@ -51,7 +51,7 @@ class DashboardSection extends StatelessWidget {
               isLoading = false;
             }
             
-            // Hiển thị loading nếu đang tải
+            // Show loading if loading
             if (isLoading) {
               return SizedBox(
                 height: cardWidth * 1.2,
@@ -61,19 +61,19 @@ class DashboardSection extends StatelessWidget {
               );
             }
             
-            // Hiển thị thông báo nếu không có video
+            // Show message if no videos
             if (videos.isEmpty) {
               return SizedBox(
                 height: cardWidth * 1.2,
                 child: Center(
                   child: Text(
                     sectionType == "for_you"
-                        ? 'Không có video nào phù hợp'
+                        ? 'No matching videos found'
                         : sectionType == "in_progress"
-                            ? 'Bạn chưa xem video nào'
+                            ? 'You haven\'t watched any videos yet'
                             : sectionType == "completed"
-                                ? 'Bạn chưa hoàn thành video nào'
-                                : 'Không có video',
+                                ? 'You haven\'t completed any videos'
+                                : 'No videos available',
                     style: const TextStyle(
                       fontFamily: 'Lexend',
                       color: Colors.grey,
@@ -84,7 +84,7 @@ class DashboardSection extends StatelessWidget {
               );
             }
             
-            // Hiển thị danh sách video
+            // Show video list
             return SizedBox(
               height: cardWidth * 1.2,
               child: ListView.separated(

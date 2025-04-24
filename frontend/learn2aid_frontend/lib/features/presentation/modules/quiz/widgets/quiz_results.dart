@@ -20,9 +20,9 @@ class QuizResults extends StatelessWidget {
 
       return Column(
         children: [
-          // Tiêu đề
+          // Title
           Text(
-            'Kết quả bài kiểm tra',
+            'Quiz Results',
             style: GoogleFonts.lexend(
               fontSize: 24,
               fontWeight: FontWeight.w600,
@@ -31,7 +31,7 @@ class QuizResults extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // Điểm số
+          // Score
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(24),
@@ -48,7 +48,7 @@ class QuizResults extends StatelessWidget {
             ),
             child: Column(
               children: [
-                // Biểu đồ tròn
+                // Circular chart
                 SizedBox(
                   height: 160,
                   width: 160,
@@ -83,7 +83,7 @@ class QuizResults extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              'Đúng $score/$totalQuestions',
+                              'Correct $score/$totalQuestions',
                               style: GoogleFonts.lexend(
                                 fontSize: 14,
                                 color: AppColors.grey3,
@@ -97,7 +97,7 @@ class QuizResults extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
 
-                // Thông tin quiz
+                // Quiz info
                 if (quizController.currentQuiz.value != null)
                   Text(
                     quizController.currentQuiz.value!.title,
@@ -110,7 +110,7 @@ class QuizResults extends StatelessWidget {
                   ),
                 const SizedBox(height: 8),
 
-                // Đánh giá
+                // Evaluation
                 Text(
                   _getScoreMessage(percentageScore),
                   textAlign: TextAlign.center,
@@ -122,10 +122,10 @@ class QuizResults extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
 
-                // Thời gian làm bài
+                // Time spent on quiz
                 if (quizController.currentQuiz.value != null)
                   Text(
-                    'Thời gian: ${_formatTime(quizController.currentQuiz.value!.timeLimit * 60 - quizController.timeRemaining.value)}',
+                    'Time: ${_formatTime(quizController.currentQuiz.value!.timeLimit * 60 - quizController.timeRemaining.value)}',
                     style: GoogleFonts.lexend(
                       fontSize: 14,
                       color: AppColors.grey3,
@@ -136,7 +136,7 @@ class QuizResults extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // Nút hành động
+          // Action buttons
           Row(
             children: [
               Expanded(
@@ -155,7 +155,7 @@ class QuizResults extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'Quay lại',
+                    'Back',
                     style: GoogleFonts.lexend(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -167,13 +167,13 @@ class QuizResults extends StatelessWidget {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    // Cách đơn giản hơn - Quay về danh sách quiz trước
+                    // Simpler approach - Return to quiz list first
                     quizController.resetQuiz();
                     
-                    // Thông báo cho người dùng
+                    // Notify the user
                     Get.snackbar(
-                      'Thành công',
-                      'Vui lòng chọn lại bài kiểm tra để làm lại',
+                      'Success',
+                      'Please select a quiz to retake',
                       snackPosition: SnackPosition.BOTTOM,
                       backgroundColor: AppColors.secondary,
                       colorText: Colors.white,
@@ -189,7 +189,7 @@ class QuizResults extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'Làm lại',
+                    'Retry',
                     style: GoogleFonts.lexend(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -211,10 +211,10 @@ class QuizResults extends StatelessWidget {
   }
 
   String _getScoreMessage(int percentageScore) {
-    if (percentageScore >= 80) return 'Xuất sắc!';
-    if (percentageScore >= 60) return 'Tốt!';
-    if (percentageScore >= 40) return 'Đạt!';
-    return 'Cần cố gắng hơn!';
+    if (percentageScore >= 80) return 'Excellent!';
+    if (percentageScore >= 60) return 'Good!';
+    if (percentageScore >= 40) return 'Passed!';
+    return 'Try harder!';
   }
 
   String _formatTime(int seconds) {
@@ -222,4 +222,4 @@ class QuizResults extends StatelessWidget {
     final remainingSeconds = seconds % 60;
     return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
   }
-} 
+}

@@ -13,7 +13,7 @@ class FeedbackPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gửi phản hồi'),
+        title: const Text('Send Feedback'),
         centerTitle: true,
       ),
       body: Obx(
@@ -26,7 +26,7 @@ class FeedbackPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Chúng tôi rất mong nhận được phản hồi của bạn!',
+                        'We would love to hear your feedback!',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -38,7 +38,7 @@ class FeedbackPage extends StatelessWidget {
                       TextField(
                         controller: nameController,
                         decoration: const InputDecoration(
-                          labelText: 'Tên của bạn (tùy chọn)',
+                          labelText: 'Your Name (optional)',
                           border: OutlineInputBorder(),
                         ),
                       ),
@@ -46,8 +46,8 @@ class FeedbackPage extends StatelessWidget {
                       TextField(
                         controller: messageController,
                         decoration: const InputDecoration(
-                          labelText: 'Nội dung phản hồi',
-                          hintText: 'Hãy cho mình biết về cảm nhận của bạn về ứng dụng: độ ổn định, thân thiện, dễ sử dụng,... Ngoài ra nếu có chỗ nào cần cải thiện, hãy góp ý cho chúng mình nhé!',
+                          labelText: 'Feedback Content',
+                          hintText: 'Please let us know your thoughts about the app: stability, user-friendliness, ease of use, etc. If there are areas for improvement, we welcome your suggestions!',
                           border: OutlineInputBorder(),
                         ),
                         maxLines: 5,
@@ -71,7 +71,7 @@ class FeedbackPage extends StatelessWidget {
                           ),
                           onPressed: () => _submitFeedback(),
                           child: const Text(
-                            'Đánh giá ứng dụng <3',
+                            'Rate the App <3',
                             style: TextStyle(fontSize: 16),
                           ),
                         ),
@@ -89,7 +89,7 @@ class FeedbackPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Bạn đánh giá ứng dụng của chúng tôi như thế nào?',
+          'How would you rate our app?',
           style: TextStyle(fontSize: 16),
         ),
         const SizedBox(height: 10),
@@ -115,7 +115,7 @@ class FeedbackPage extends StatelessWidget {
             () => Text(
               controller.rating.value > 0
                   ? '${controller.rating.value.toInt()}/5'
-                  : 'Chọn đánh giá',
+                  : 'Select rating',
               style: const TextStyle(fontSize: 16),
             ),
           ),
@@ -129,12 +129,12 @@ class FeedbackPage extends StatelessWidget {
     final name = nameController.text.trim();
 
     if (message.isEmpty) {
-      Get.snackbar('Lỗi', 'Vui lòng nhập nội dung phản hồi');
+      Get.snackbar('Error', 'Please enter feedback content');
       return;
     }
 
     if (controller.rating.value == 0) {
-      Get.snackbar('Lỗi', 'Vui lòng chọn đánh giá sao');
+      Get.snackbar('Error', 'Please select a star rating');
       return;
     }
 

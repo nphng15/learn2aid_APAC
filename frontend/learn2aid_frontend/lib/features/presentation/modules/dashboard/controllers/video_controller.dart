@@ -11,107 +11,98 @@ class VideoController extends GetxController {
   final GetVideoStateUseCase _getVideoStateUseCase = Get.find<GetVideoStateUseCase>();
   final SaveVideoStateUseCase _saveVideoStateUseCase = Get.find<SaveVideoStateUseCase>();
   
-  // Danh sách video
+  // Video lists
   final RxList<VideoModel> videos = <VideoModel>[].obs;
   final RxList<VideoModel> forYouVideos = <VideoModel>[].obs;
   final RxList<VideoModel> inProgressVideos = <VideoModel>[].obs;
   final RxList<VideoModel> completedVideos = <VideoModel>[].obs;
   
-  // Video đang được chọn
+  // Selected video
   final Rx<VideoModel?> selectedVideo = Rx<VideoModel?>(null);
   
-  // Trạng thái xem video
+  // Video watch status
   final RxMap<String, double> videoProgress = <String, double>{}.obs;
   
-  // Trạng thái
+  // Status
   final RxBool isLoading = true.obs;
   final RxString selectedCategory = 'all'.obs;
   final RxString searchQuery = ''.obs;
   
-  // FocusNode để quản lý focus của thanh tìm kiếm
+  // FocusNode to manage search bar focus
   final FocusNode searchFocusNode = FocusNode();
   
-  // Danh sách ID video đang xem dở (sử dụng Hive)
+  // List of in-progress video IDs (using Hive)
   final RxList<String> inProgressVideoIds = <String>[].obs;
   
-  // Danh sách ID video đã hoàn thành (sử dụng Hive)
+  // List of completed video IDs (using Hive)
   final RxList<String> completedVideoIds = <String>[].obs;
 
   @override
   void onInit() {
     super.onInit();
     
-    // Khôi phục trạng thái
+    // Restore state
     _loadState();
     
-    // Tải danh sách video
+    // Load video list
     loadVideos();
   }
   
-  // Tải trạng thái
+  // Load state
   Future<void> _loadState() async {
     try {
-      // Khôi phục danh mục đã chọn
+      // Restore selected category
       // selectedCategory.value = await _getVideoStateUseCase.getSelectedCategory();
       
-      // Khôi phục truy vấn tìm kiếm
+      // Restore search query
       // searchQuery.value = await _getVideoStateUseCase.getSearchQuery();
       
-      // Khôi phục danh sách video đã hoàn thành
+      // Restore completed video list
       completedVideoIds.value = await _getVideoStateUseCase.getCompletedVideoIds();
       
-      // Khôi phục danh sách video đang xem dở
+      // Restore in-progress video list
       inProgressVideoIds.value = await _getVideoStateUseCase.getInProgressVideoIds();
       
-      print('DEBUG - Đã tải trạng thái');
-      print('DEBUG - Danh mục: ${selectedCategory.value}');
-      print('DEBUG - Video hoàn thành: ${completedVideoIds.length}');
-      print('DEBUG - Video đang xem: ${inProgressVideoIds.length}');
+      print('DEBUG - State loaded');
+      print('DEBUG - Category: ${selectedCategory.value}');
+      print('DEBUG - Completed videos: ${completedVideoIds.length}');
+      print('DEBUG - In-progress videos: ${inProgressVideoIds.length}');
     } catch (e) {
-      print('DEBUG - Lỗi khi tải trạng thái: $e');
+      print('DEBUG - Error loading state: $e');
     }
   }
   
   @override
   void onClose() {
-    // Lưu trạng thái
+    // Save state
     _saveState();
     
-    // Giải phóng FocusNode khi controller bị hủy
+    // Release FocusNode when controller is destroyed
     searchFocusNode.dispose();
     super.onClose();
   }
   
-  // Lưu trạng thái
+  // Save state
   Future<void> _saveState() async {
     try {
-      // Lưu danh mục đã chọn
-      // await _saveVideoStateUseCase.saveSelectedCategory(selectedCategory.value);
+      // Save selected category
+      await _saveVideoStateUseCase.saveSelectedCategory(selectedCategory.value);
       
-      // Lưu truy vấn tìm kiếm
-      // await _saveVideoStateUseCase.saveSearchQuery(searchQuery.value);
+      // Save search query
+      await _saveVideoStateUseCase.saveSearchQuery(searchQuery.value);
       
-      // Lưu danh sách video đã hoàn thành
+      // Save completed video list
       await _saveVideoStateUseCase.saveCompletedVideoIds(completedVideoIds);
       
-      // Lưu danh sách video đang xem dở
+      // Save in-progress video list
       await _saveVideoStateUseCase.saveInProgressVideoIds(inProgressVideoIds);
       
-      // Lưu ID video đang được chọn
-      // await _saveVideoStateUseCase.saveSelectedVideoId(selectedVideo.value?.id);
-      
-      // Lưu tiến trình xem video
-      for (final entry in videoProgress.entries) {
-        await _saveVideoStateUseCase.saveVideoProgress(entry.key, entry.value);
-      }
-      
-      print('DEBUG - Đã lưu trạng thái');
+      print('DEBUG - State saved');
     } catch (e) {
-      print('DEBUG - Lỗi khi lưu trạng thái: $e');
+      print('DEBUG - Error saving state: $e');
     }
   }
   
-  // Tải danh sách video
   Future<void> loadVideos() async {
     isLoading.value = true;
     try {
@@ -121,16 +112,16 @@ class VideoController extends GetxController {
         videos.value = await _videoService.getVideosByCategory(selectedCategory.value);
       }
       
-      // Cập nhật danh sách video theo loại
+      // Update video lists by type
       updateVideoLists();
       
-      // Khôi phục video đang được chọn nếu có
+      // Restore selected video if exists
       final selectedVideoId = await _getVideoStateUseCase.getSelectedVideoId();
       if (selectedVideoId != null) {
         final video = videos.firstWhereOrNull((v) => v.id == selectedVideoId);
         if (video != null) {
           selectedVideo.value = video;
-          print('DEBUG - Đã khôi phục video đang được chọn: ${video.title}');
+          print('DEBUG - Selected video restored: ${video.title}');
         }
       }
     } catch (e) {
@@ -140,10 +131,10 @@ class VideoController extends GetxController {
     }
   }
   
-  // Cập nhật các danh sách video dựa trên tìm kiếm và bộ lọc
+  // Update video lists based on search and filter
   void updateVideoLists() async {
     try {
-      // Tải tiến trình video
+      // Load video progress
       videoProgress.clear();
       for (final video in videos) {
         final progress = await _getVideoStateUseCase.getVideoProgress(video.id);
@@ -152,79 +143,67 @@ class VideoController extends GetxController {
         }
       }
       
-      // Cập nhật danh sách "For you" - loại bỏ video đã hoàn thành
+      // Update "For you" list - remove completed videos
       forYouVideos.value = videos.where((video) {
-        // Tìm kiếm trong tiêu đề video
+        // Search in video title
         final searchMatch = searchQuery.isEmpty || 
                             video.title.toLowerCase().contains(searchQuery.value.toLowerCase());
         
-        // Kiểm tra video có đã hoàn thành không
+        // Check if video is completed
         final isCompleted = video.completed || completedVideoIds.contains(video.id);
         
-        // Chỉ hiển thị video chưa hoàn thành
+        // Only show uncompleted videos
         return searchMatch && !isCompleted;
       }).toList();
       
-      // Cập nhật danh sách "In progress" - video đang xem dở
+      // Update "In progress" list - videos being watched
       inProgressVideos.value = videos.where((video) {
-        // Kiểm tra video có trong danh sách đang xem dở không
+        // Check if video is in progress
         final isInProgress = inProgressVideoIds.contains(video.id);
         
-        // Tìm kiếm trong tiêu đề video
+        // Search in video title
         final searchMatch = searchQuery.isEmpty || 
                              video.title.toLowerCase().contains(searchQuery.value.toLowerCase());
         
-        // Kiểm tra video có đã hoàn thành không
+        // Check if video is completed
         final isCompleted = video.completed || completedVideoIds.contains(video.id);
         
-        // Chỉ lấy video đang xem dở và chưa hoàn thành
+        // Only get in-progress and uncompleted videos
         return isInProgress && !isCompleted && searchMatch;
       }).toList();
       
-      // Cập nhật danh sách video đã hoàn thành
+      // Update completed video list
       completedVideos.value = videos.where((video) {
-        // Kiểm tra video đã hoàn thành chưa (dựa trên trường completed hoặc ID có trong danh sách)
+        // Check if video is completed
         final isCompleted = video.completed || completedVideoIds.contains(video.id);
         
-        // Tìm kiếm trong tiêu đề video
+        // Search in video title
         final searchMatch = searchQuery.isEmpty || 
                              video.title.toLowerCase().contains(searchQuery.value.toLowerCase());
         
-        final result = isCompleted && searchMatch;
-        if (isCompleted) {
-          print('DEBUG - Video đã hoàn thành: ${video.id} (${video.title})');
-        }
-        
-        return result;
+        return isCompleted && searchMatch;
       }).toList();
-      
-      print('DEBUG - Số video đã hoàn thành: ${completedVideos.length}');
-      print('DEBUG - Số video đang xem dở: ${inProgressVideos.length}');
-      print('DEBUG - Số video trong For You: ${forYouVideos.length}');
-      
-      // Lưu trạng thái
-      _saveState();
     } catch (e) {
-      print('DEBUG - LỖI khi cập nhật danh sách video: $e');
+      print('Error updating video lists: $e');
     }
   }
-
-  // Thay đổi danh mục được chọn
+  
+  // Change selected category
   void changeCategory(String category) {
     selectedCategory.value = category;
     loadVideos();
     
-    // Xóa focus khỏi thanh tìm kiếm
+    // Remove focus from search bar
     searchFocusNode.unfocus();
   }
   
-  // Tìm kiếm video theo tên
+  // Search videos by name
   void searchVideos(String query) {
     searchQuery.value = query;
     updateVideoLists();
   }
   
-  // Thêm video vào danh sách đang xem dở
+  // Add video to in-progress list
   void addToInProgress(String videoId) {
     if (!inProgressVideoIds.contains(videoId)) {
       inProgressVideoIds.add(videoId);
@@ -233,42 +212,42 @@ class VideoController extends GetxController {
     }
   }
   
-  // Đặt video đang được chọn
+  // Set selected video
   void setSelectedVideo(VideoModel video) {
     selectedVideo.value = video;
     _saveVideoStateUseCase.saveSelectedVideoId(video.id);
-    // Thêm vào danh sách đang xem dở
+    // Add to in-progress list
     addToInProgress(video.id);
   }
   
-  // Cập nhật tiến trình xem video
+  // Update video watch progress
   void updateVideoProgress(String videoId, double progress) {
     videoProgress[videoId] = progress;
     _saveVideoStateUseCase.saveVideoProgress(videoId, progress);
   }
   
-  // Lấy tiến trình xem của video
+  // Get video watch progress
   Future<double> getVideoProgressAsync(String videoId) async {
     return _getVideoStateUseCase.getVideoProgress(videoId);
   }
   
-  // Lấy tiến trình xem của video (phiên bản đồng bộ)
+  // Get video watch progress (synchronous version)
   double getVideoProgress(String videoId) {
     return videoProgress[videoId] ?? 0.0;
   }
   
-  // Đánh dấu video đã hoàn thành
+  // Mark video as completed
   void markVideoAsCompleted(String videoId) {
     try {
       print('DEBUG - VideoController.markVideoAsCompleted()');
       print('DEBUG - Video ID: $videoId');
       
-      // Kiểm tra ID hợp lệ
+      // Check valid ID
       if (videoId.isEmpty) {
-        print('DEBUG - ERROR: videoId rỗng');
+        print('DEBUG - ERROR: Empty videoId');
         Get.snackbar(
-          'Lỗi',
-          'Không thể đánh dấu video hoàn thành: ID không hợp lệ',
+          'Error',
+          'Could not mark video as completed: Invalid ID',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: Colors.white,
@@ -276,84 +255,60 @@ class VideoController extends GetxController {
         return;
       }
       
-      // Thêm ID video vào danh sách đã hoàn thành
+      // Add video ID to completed list
       if (!completedVideoIds.contains(videoId)) {
         completedVideoIds.add(videoId);
         _saveVideoStateUseCase.addCompletedVideoId(videoId);
-        print('DEBUG - Đã thêm vào completedVideoIds: $videoId');
-        print('DEBUG - Danh sách completedVideoIds: $completedVideoIds');
+        print('DEBUG - Added to completedVideoIds: $videoId');
+        print('DEBUG - CompletedVideoIds list: $completedVideoIds');
       } else {
-        print('DEBUG - Video đã tồn tại trong completedVideoIds: $videoId');
+        print('DEBUG - Video already exists in completedVideoIds: $videoId');
       }
       
-      // Cập nhật mô hình video nếu đang được chọn - xử lý an toàn hơn
+      // Update video model if selected - safer handling
       try {
         if (selectedVideo.value?.id == videoId) {
           final updatedVideo = selectedVideo.value?.copyWith(completed: true);
           if (updatedVideo != null) {
             selectedVideo.value = updatedVideo;
-            print('DEBUG - Đã cập nhật selectedVideo.completed = true');
+            print('DEBUG - Updated selectedVideo.completed = true');
           } else {
-            print('DEBUG - selectedVideo.copyWith trả về null');
+            print('DEBUG - selectedVideo.copyWith returned null');
           }
         }
       } catch (e) {
-        print('DEBUG - Lỗi khi cập nhật selectedVideo: $e');
+        print('DEBUG - Error updating selectedVideo: $e');
       }
       
-      // Cập nhật trong danh sách videos - xử lý an toàn hơn
+      // Update in videos list - safer handling
       try {
         final index = videos.indexWhere((v) => v.id == videoId);
-        if (index >= 0) {
+        if (index != -1) {
           final updatedVideo = videos[index].copyWith(completed: true);
-          if (updatedVideo != null) {
-            videos[index] = updatedVideo;
-            print('DEBUG - Đã cập nhật video trong danh sách videos index: $index');
-          } else {
-            print('DEBUG - videos[index].copyWith trả về null');
-            // Thử phương pháp thay thế nếu copyWith không hoạt động
-            final originalVideo = videos[index];
-            final newVideo = VideoModel(
-              id: originalVideo.id,
-              title: originalVideo.title,
-              description: originalVideo.description,
-              videoUrl: originalVideo.videoUrl,
-              thumbnailUrl: originalVideo.thumbnailUrl,
-              category: originalVideo.category,
-              duration: originalVideo.duration,
-              uploadedBy: originalVideo.uploadedBy,
-              uploaderName: originalVideo.uploaderName,
-              completed: true,
-            );
-            videos[index] = newVideo;
-            print('DEBUG - Đã cập nhật video bằng phương pháp thay thế');
-          }
-        } else {
-          print('DEBUG - Không tìm thấy video trong danh sách videos: $videoId');
+          videos[index] = updatedVideo;
+          print('DEBUG - Updated video in videos list');
         }
       } catch (e) {
-        print('DEBUG - Lỗi khi cập nhật video trong danh sách: $e');
+        print('DEBUG - Error updating videos list: $e');
       }
       
-      // Cập nhật các danh sách
+      // Update video lists
       updateVideoLists();
-      print('DEBUG - Đã cập nhật các danh sách video');
-      print('DEBUG - completedVideos.length: ${completedVideos.length}');
       
-      // Hiển thị thông báo thành công
+      // Show success message
       Get.snackbar(
-        'Thành công',
-        'Video đã được đánh dấu hoàn thành',
+        'Success',
+        'Video marked as completed',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green,
         colorText: Colors.white,
         duration: const Duration(seconds: 2),
       );
     } catch (e) {
-      print('DEBUG - LỖI khi đánh dấu video hoàn thành: $e');
+      print('DEBUG - ERROR marking video as completed: $e');
       Get.snackbar(
-        'Lỗi',
-        'Không thể đánh dấu video hoàn thành: $e',
+        'Error',
+        'Could not mark video as completed: $e',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -361,21 +316,21 @@ class VideoController extends GetxController {
     }
   }
 
-  // Thêm phương thức openVideo nếu chưa tồn tại
+  // Add openVideo method if not exists
   void openVideo(String videoUrl, String videoId) async {
     try {
-      // Cập nhật video đang xem
+      // Update video being watched
       addToInProgress(videoId);
       
-      // Sử dụng url_launcher để mở video
+      // Use url_launcher to open video
       final Uri url = Uri.parse(videoUrl);
       final bool canLaunch = await canLaunchUrl(url);
       
       if (canLaunch) {
-        // Hiển thị snackbar thông báo mở video
+        // Show snackbar notification
         Get.snackbar(
-          'Đang mở video',
-          'Video đang được mở trong ứng dụng...',
+          'Opening video',
+          'Video is being opened in the application...',
           snackPosition: SnackPosition.BOTTOM,
           duration: const Duration(seconds: 2),
         );
@@ -383,49 +338,49 @@ class VideoController extends GetxController {
         await launchUrl(url, mode: LaunchMode.externalApplication);
       } else {
         Get.snackbar(
-          'Lỗi',
-          'Không thể mở video. Vui lòng thử lại sau.',
+          'Error',
+          'Could not open video. Please try again later.',
           snackPosition: SnackPosition.BOTTOM,
         );
       }
     } catch (e) {
       Get.snackbar(
-        'Lỗi',
-        'Đã xảy ra lỗi: ${e.toString()}',
+        'Error',
+        'An error occurred: ${e.toString()}',
         snackPosition: SnackPosition.BOTTOM,
       );
     }
   }
 
-  // Kiểm tra xem video ID có trong danh sách videos không
+  // Check if video ID exists in video list
   bool hasVideoWithId(String videoId) {
     final exists = videos.any((video) => video.id == videoId);
-    print('DEBUG - Kiểm tra video ID $videoId trong danh sách videos: ${exists ? 'CÓ' : 'KHÔNG'}');
+    print('DEBUG - Check video ID $videoId in video list: ${exists ? 'YES' : 'NO'}');
     return exists;
   }
 
-  // Thêm video thử nghiệm để debug
+  // Add test video for debugging
   void addTestVideo() {
     final newVideo = VideoModel(
       id: 'test_video_1',
-      title: 'Video Thử Nghiệm',
-      description: 'Video để kiểm tra chức năng đánh dấu hoàn thành',
+      title: 'Test Video',
+      description: 'Video for testing completion marking',
       videoUrl: 'https://example.com/video.mp4',
       thumbnailUrl: 'https://example.com/thumbnail.jpg',
-      category: 'Thử nghiệm',
+      category: 'Test',
       duration: 120,
       uploadedBy: 'admin',
       uploaderName: 'Admin',
     );
     
-    // Thêm vào danh sách videos
+    // Add to video list
     videos.add(newVideo);
     
-    // Cập nhật danh sách
+    // Update lists
     updateVideoLists();
     
-    // In thông tin
-    print('DEBUG - Đã thêm video thử nghiệm: ${newVideo.id}');
-    print('DEBUG - Danh sách videos length: ${videos.length}');
+    // In output
+    print('DEBUG - Added test video: ${newVideo.id}');
+    print('DEBUG - Video list length: ${videos.length}');
   }
 } 

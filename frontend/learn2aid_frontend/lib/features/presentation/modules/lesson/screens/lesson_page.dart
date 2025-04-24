@@ -24,13 +24,13 @@ class _LessonPageState extends State<LessonPage> with SingleTickerProviderStateM
     super.initState();
     _lessonController = Get.find<LessonController>();
     
-    // Khởi tạo TabController với 2 tab
+    // Initialize TabController with 2 tabs
     _tabController = TabController(length: 2, vsync: this);
     
-    // Lắng nghe sự kiện tab change
+    // Listen for tab change events
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
-        // Chỉ cập nhật khi tab thực sự thay đổi
+        // Only update when tab actually changes
         final tabNames = ['content', 'session'];
         final tabName = tabNames[_tabController.index];
         _lessonController.onTabChanged(tabName);
@@ -73,8 +73,8 @@ class _LessonPageState extends State<LessonPage> with SingleTickerProviderStateM
               unselectedLabelColor: Colors.grey,
               indicatorColor: const Color(0xff215273),
               tabs: const [
-                Tab(text: 'Nội dung'),
-                Tab(text: 'Luyện tập'),
+                Tab(text: 'Content'),
+                Tab(text: 'Practice'),
               ],
             ),
             
@@ -86,7 +86,7 @@ class _LessonPageState extends State<LessonPage> with SingleTickerProviderStateM
                 controller: _tabController,
                 physics: const BouncingScrollPhysics(),
                 children: [
-                  // Tab 1: Thông tin và xem video
+                  // Tab 1: Information and video viewing
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -108,7 +108,7 @@ class _LessonPageState extends State<LessonPage> with SingleTickerProviderStateM
                     ),
                   ),
                   
-                  // Tab 2: Video tương tác
+                  // Tab 2: Interactive video
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(

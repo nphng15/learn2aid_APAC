@@ -94,7 +94,7 @@ class EventItem extends StatelessWidget {
 
                 const SizedBox(height: 8),
 
-                // Mô tả ngắn
+                // Short description
                 Text(
                   event.description,
                   style: GoogleFonts.lexend(fontSize: 14),
@@ -104,20 +104,20 @@ class EventItem extends StatelessWidget {
 
                 const SizedBox(height: 16),
 
-                // Số người tham gia và nút tham gia
+                // Number of participants and join button
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Số người tham gia
+                    // Number of participants
                     Text(
-                      '${event.joinedUsers.length} người đăng ký',
+                      '${event.joinedUsers.length} registered',
                       style: GoogleFonts.lexend(
                         color: AppColors.grey3,
                         fontSize: 14,
                       ),
                     ),
 
-                    // Nút tham gia
+                    // Join button
                     Obx(() => ElevatedButton(
                       onPressed: controller.isLoading.value
                           ? null
@@ -139,7 +139,7 @@ class EventItem extends StatelessWidget {
                               ),
                             )
                           : Text(
-                              hasUserJoined ? 'Hủy đăng ký' : 'Đăng ký',
+                              hasUserJoined ? 'Unregister' : 'Register',
                               style: GoogleFonts.lexend(),
                             ),
                     )),

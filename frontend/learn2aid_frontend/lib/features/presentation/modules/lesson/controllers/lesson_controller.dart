@@ -16,42 +16,42 @@ class LessonController extends GetxController {
     super.onInit();
     _videoController = Get.find<VideoController>();
     
-    // Đăng ký currentTab với tag để có thể truy cập từ các controller khác
+    // Register currentTab with tag to access from other controllers
     Get.put<Rx<String>>(currentTab, tag: 'currentTab');
   }
   
-  // Hàm gọi khi tab thay đổi
+  // Function called when tab changes
   void onTabChanged(String tab) {
-    // Chỉ cập nhật nếu thực sự có thay đổi
+    // Only update if there's actually a change
     if (currentTab.value != tab) {
-      print('DEBUG - LessonController: Tab thay đổi từ ${currentTab.value} sang $tab');
+      print('DEBUG - LessonController: Tab changed from ${currentTab.value} to $tab');
       currentTab.value = tab;
     }
   }
   
-  //cập nhật tiến trình xem video
+  // Update video watching progress
   void updateVideoProgress(String videoId, double progress) {
     _videoController.updateVideoProgress(videoId, progress);
   }
   
-  //đánh dấu video đã hoàn thành
+  // Mark video as completed
   void markVideoAsCompleted(String videoId) {
     _videoController.updateVideoProgress(videoId, 1.0);
   }
   
-  //đánh dấu video đã hoàn thành dựa trên điểm số
+  // Mark video as completed based on score
   void markVideoAsCompletedWithScore(String videoId, double score) {
     // Debug
     print('DEBUG - markVideoAsCompletedWithScore');
     print('DEBUG - Video ID: $videoId');
     print('DEBUG - Score: $score');
     
-    // Kiểm tra ID hợp lệ
+    // Check if ID is valid
     if (videoId.isEmpty) {
-      print('DEBUG - ERROR: videoId rỗng');
+      print('DEBUG - ERROR: empty videoId');
       Get.snackbar(
-        'Lỗi',
-        'Không thể đánh dấu video hoàn thành: ID không hợp lệ',
+        'Error',
+        'Cannot mark video as completed: Invalid ID',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -59,32 +59,32 @@ class LessonController extends GetxController {
       return;
     }
     
-    // Cập nhật tiến trình xem video thành 100%
+    // Update video progress to 100%
     _videoController.updateVideoProgress(videoId, 1.0);
     
-    // Nếu điểm > 80, đánh dấu video đã hoàn thành 
+    // If score > 80, mark video as completed
     if (score > 80) {
-      print('DEBUG - Đánh dấu video hoàn thành với điểm: $score');
+      print('DEBUG - Marking video as completed with score: $score');
       _videoController.markVideoAsCompleted(videoId);
       
-      // Thêm debug thông báo
-      print('DEBUG - Đã gọi markVideoAsCompleted()');
+      // Add debug notification
+      print('DEBUG - Called markVideoAsCompleted()');
     } else {
-      print('DEBUG - Không đánh dấu hoàn thành vì điểm dưới 80: $score');
+      print('DEBUG - Not marking as completed because score is below 80: $score');
     }
   }
   
-  //lấy video tiếp theo cùng danh mục
+  // Get next video in same category
   Future<VideoModel?> getNextVideoInCategory(String currentVideoId, String category) async {
     isLoading.value = true;
     try {
       final videos = await _videoService.getVideosByCategory(category);
       isLoading.value = false;
       
-      // Tìm vị trí của video hiện tại
+      // Find position of current video
       final currentIndex = videos.indexWhere((video) => video.id == currentVideoId);
       if (currentIndex != -1 && currentIndex < videos.length - 1) {
-        // Trả về video tiếp theo nếu có
+        // Return next video if available
         return videos[currentIndex + 1];
       }
       return null;

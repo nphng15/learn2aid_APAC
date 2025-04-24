@@ -21,8 +21,8 @@ class LessonContent extends StatelessWidget {
                        'Nullam tristique eros nec diam consectetur gravida. Nulla facilisi. '
                        'Vestibulum malesuada nisl tortor, tincidunt pulvinar massa lacinia ut.',
     this.durationInSeconds = 120,
-    this.title = 'Tiêu đề video',
-    this.category = 'Phân loại',
+    this.title = 'Video Title',
+    this.category = 'Category',
     this.videoId = '',
     this.videoUrl = '',
     this.videoController,
@@ -35,7 +35,7 @@ class LessonContent extends StatelessWidget {
         alignment: Alignment.center, 
         child: Container(
           width: MediaQuery.of(context).size.width * 0.85,
-          height: MediaQuery.of(context).size.height * 0.55, // Giảm chiều cao từ 0.58 xuống 0.55
+          height: MediaQuery.of(context).size.height * 0.55, // Reduced height from 0.58 to 0.55
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: Colors.white, 
@@ -45,7 +45,7 @@ class LessonContent extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header với tiêu đề
+              // Header with title
               Padding(
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
@@ -59,7 +59,7 @@ class LessonContent extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              // Phần ảnh - giảm flex để thu nhỏ kích thước còn khoảng 1/3 card
+              // Image section - reduced flex to make it about 1/3 of the card
               Expanded(
                 flex: 2,
                 child: Stack(
@@ -82,7 +82,7 @@ class LessonContent extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // Hiển thị danh mục ở góc dưới bên trái đè lên video
+                    // Display category in the bottom left corner over the video
                     Positioned(
                       left: 8,
                       bottom: 8,
@@ -118,7 +118,7 @@ class LessonContent extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 6),
-              // Phần mô tả - tăng flex để hiển thị nhiều nội dung hơn
+              // Description section - increased flex to show more content
               Expanded(
                 flex: 7,
                 child: Column(
@@ -128,7 +128,7 @@ class LessonContent extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Mô tả',
+                          'Description',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -136,7 +136,7 @@ class LessonContent extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '${(durationInSeconds / 60).floor()} phút',
+                          '${(durationInSeconds / 60).floor()} minutes',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
@@ -160,12 +160,12 @@ class LessonContent extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    // Nút xem video
+                    // Watch video button
                     Center(
                       child: InkWell(
                         onTap: () {
                           if (videoUrl.isNotEmpty && videoController != null) {
-                            // Hiển thị popup video player thay vì mở trình duyệt
+                            // Show popup video player instead of opening browser
                             showDialog(
                               context: context,
                               barrierDismissible: false,
@@ -179,7 +179,7 @@ class LessonContent extends StatelessWidget {
                               ),
                             );
                             
-                            // Cập nhật video đang xem
+                            // Update video being watched
                             videoController!.addToInProgress(videoId);
                           }
                         },
@@ -202,7 +202,7 @@ class LessonContent extends StatelessWidget {
                               ),
                               SizedBox(width: 6),
                               Text(
-                                'Xem video',
+                                'Watch Video',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,

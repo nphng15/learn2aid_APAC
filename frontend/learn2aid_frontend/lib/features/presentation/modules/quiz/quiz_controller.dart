@@ -27,14 +27,14 @@ class QuizController extends GetxController {
   var timeRemaining = 0.obs;  // seconds
   var timerRunning = false.obs;
   
-  // Kết quả quiz
+  // Quiz results
   var score = 0.obs;
   var showResults = false.obs;
 
-  // ID duy nhất cho mỗi timer để theo dõi
+  // Unique ID for each timer to track
   int? _currentTimerId;
 
-  // Cờ để theo dõi tiến độ khởi tạo quiz
+  // Flag to track quiz initialization progress
   var quizInitializing = false.obs;
 
   QuizController({
@@ -53,7 +53,7 @@ class QuizController extends GetxController {
     try {
       isLoading.value = true;
       errorMessage.value = '';
-
+      
       // Lấy danh sách quiz cơ bản mà không cập nhật số câu hỏi
       quizzes.value = await getQuizzesUseCase.execute();
       
@@ -69,7 +69,7 @@ class QuizController extends GetxController {
       // Tải số câu hỏi trong background
       _updateQuizQuestionCounts();
     } catch (e) {
-      errorMessage.value = 'Lỗi khi tải danh sách quiz: $e';
+      errorMessage.value = 'Failed to load quizzes: $e';
       isLoading.value = false;
       update();
     } 
@@ -116,22 +116,22 @@ class QuizController extends GetxController {
             }
           }
         } catch (e) {
-          print('Lỗi khi lấy số câu hỏi cho quiz ${currentQuiz.id}: $e');
+          print('Error when getting number of questions for quiz ${currentQuiz.id}: $e');
         }
       }
     } catch (e) {
-      print('Lỗi khi cập nhật số câu hỏi: $e');
+      print('Error updating question counts: $e');
     }
   }
 
-  // Khởi tạo quiz khi người dùng bấm nút bắt đầu
+  // Initialize quiz when user presses start button
   void initQuiz(String quizId) {
     try {
-      // Kiểm tra xem đã có quá trình khởi tạo đang chạy không
+      // Check if initialization process is already running
       if (quizInitializing.value) {
         Get.snackbar(
-          'Thông báo',
-          'Đang khởi tạo bài kiểm tra, vui lòng đợi...',
+          'Notice',
+          'Quiz initialization in progress, please wait...',
           duration: const Duration(seconds: 1),
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.blue.withOpacity(0.7),
@@ -140,18 +140,18 @@ class QuizController extends GetxController {
         return;
       }
       
-      // Đặt cờ khởi tạo
+      // Set initialization flag
       quizInitializing.value = true;
       
-      // Chuyển đến màn hình quiz (UI sẽ hiển thị loader)
+      // Navigate to quiz screen (UI will show loader)
       isLoading.value = true;
       
-      // Dừng timer nếu đang chạy
+      // Stop timer if running
       if (timerRunning.value) {
         stopTimer();
       }
       
-      // Reset trạng thái
+      // Reset state
       errorMessage.value = '';
       showResults.value = false;
       currentQuestionIndex.value = 0;
@@ -159,20 +159,20 @@ class QuizController extends GetxController {
       questions.clear();
       userAnswers.value = <int>[];
       
-      // Cập nhật UI
+      // Update UI
       update();
       
-      // Bắt đầu khởi tạo quiz trong background
+      // Start quiz initialization in background
       _startQuizProcess(quizId);
     } catch (e) {
-      // Xử lý lỗi và reset trạng thái
-      print('Lỗi khi khởi tạo quiz: $e');
+      // Handle errors and reset state
+      print('Error initializing quiz: $e');
       quizInitializing.value = false;
       isLoading.value = false;
       
       Get.snackbar(
-        'Lỗi',
-        'Không thể bắt đầu bài kiểm tra: $e',
+        'Error',
+        'Cannot start the quiz: $e',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -181,7 +181,7 @@ class QuizController extends GetxController {
     }
   }
   
-  // Quy trình bắt đầu quiz trong background
+  // Quiz initiation process in background
   Future<void> _startQuizProcess(String quizId) async {
     // Sử dụng Future.delayed để cho phép UI cập nhật trước
     await Future.delayed(const Duration(milliseconds: 100));
@@ -190,7 +190,7 @@ class QuizController extends GetxController {
       // Bước 1: Lấy thông tin quiz với timeout
       await _loadQuizInfo(quizId).timeout(
         const Duration(seconds: 10),
-        onTimeout: () => throw 'Quá thời gian tải thông tin bài kiểm tra',
+        onTimeout: () => throw 'Quiz information loading timed out',
       );
       
       // Sau khi có thông tin quiz, tải câu hỏi
@@ -201,18 +201,18 @@ class QuizController extends GetxController {
         // Bước 2: Tải câu hỏi với timeout
         await _loadQuizQuestions(quizId).timeout(
           const Duration(seconds: 10),
-          onTimeout: () => throw 'Quá thời gian tải câu hỏi',
+          onTimeout: () => throw 'Questions loading timed out',
         );
       } else {
-        throw 'Không thể tải thông tin bài kiểm tra';
+        throw 'Cannot load quiz information';
       }
     } catch (e) {
-      errorMessage.value = 'Lỗi khi bắt đầu bài kiểm tra: $e';
-      print('Lỗi khi bắt đầu quiz: $e');
+      errorMessage.value = 'Error loading quiz: $e';
+      print('Error starting quiz: $e');
       
       Get.snackbar(
-        'Lỗi',
-        'Không thể bắt đầu bài kiểm tra: $e',
+        'Error',
+        'Cannot load quiz: $e',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -228,60 +228,67 @@ class QuizController extends GetxController {
     }
   }
   
-  // Chỉ lấy thông tin quiz, không tải câu hỏi
   Future<void> _loadQuizInfo(String quizId) async {
     try {
-      // Tải thông tin quiz
+      // Load quiz info
       final quiz = await getQuizzesUseCase.repository.getQuizById(quizId);
       
       if (quiz == null) {
-        errorMessage.value = 'Không tìm thấy bài kiểm tra';
+        errorMessage.value = 'Quiz not found';
         return;
       }
       
-      // Cập nhật thông tin quiz
+      // Update quiz info
       currentQuiz.value = quiz;
       
-      // Cập nhật UI sau khi có thông tin quiz
+      // Update UI after getting quiz info
       update();
     } catch (e) {
-      throw 'Không thể tải thông tin bài kiểm tra';
+      throw 'Cannot load quiz information';
     }
   }
   
-  // Tải câu hỏi quiz
+  // Load quiz questions
   Future<void> _loadQuizQuestions(String quizId) async {
     try {
-      // Tải danh sách câu hỏi
+      // Load question list
       final loadedQuestions = await getQuizQuestionsUseCase.execute(quizId);
       
       if (loadedQuestions.isEmpty) {
-        errorMessage.value = 'Không có câu hỏi nào cho bài kiểm tra này';
+        errorMessage.value = 'No questions available for this quiz';
         return;
       }
       
-      // Gán danh sách câu hỏi vào biến observable
+      // Assign question list to observable variable
       questions.value = loadedQuestions;
       
-      // Khởi tạo mảng câu trả lời mới với kích thước chính xác
+      // Initialize new answer array with correct size
       userAnswers.value = List.filled(questions.length, -1);
       
-      // Khởi tạo timer nếu chưa có lỗi
+      // Initialize timer if no errors
       if (errorMessage.value.isEmpty) {
         startTimer();
       }
       
-      // Cập nhật UI sau khi có câu hỏi
+      // Update UI after getting questions
       update();
     } catch (e) {
-      print('Lỗi khi tải câu hỏi quiz: $e');
-      throw 'Không thể tải câu hỏi';
+      print('Error loading quiz questions: $e');
+      throw 'Cannot load questions';
     }
   }
-
+  
+  // Get formatted time
+  String get formattedTime {
+    final minutes = (timeRemaining.value / 60).floor();
+    final seconds = timeRemaining.value % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  }
+  
+  // Start timer for quiz
   void startTimer() {
     try {
-      // Dừng timer hiện tại nếu đang chạy
+      // Stop any existing timer
       if (timerRunning.value) {
         stopTimer();
       }
@@ -311,7 +318,7 @@ class QuizController extends GetxController {
           update(); // Cập nhật UI
           return true;
         } else {
-          // Hết thời gian
+          // Time's up, submit the quiz
           if (timerRunning.value) {
             await submitQuiz(); // Tự động nộp bài khi hết giờ
           }
@@ -319,25 +326,20 @@ class QuizController extends GetxController {
           return false;
         }
       }).catchError((e) {
-        print('Lỗi trong timer: $e');
+        print('Error in timer: $e');
         stopTimer();
       });
     } catch (e) {
-      print('Lỗi khi bắt đầu timer: $e');
+      print('Error starting timer: $e');
       stopTimer();
     }
   }
-
+  
+  // Stop timer
   void stopTimer() {
     timerRunning.value = false;
     _currentTimerId = null;
     update();
-  }
-
-  String get formattedTime {
-    final minutes = (timeRemaining.value / 60).floor();
-    final seconds = timeRemaining.value % 60;
-    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
   void selectAnswer(int questionIndex, int answerIndex) {
@@ -361,10 +363,9 @@ class QuizController extends GetxController {
       currentQuestionIndex.value++;
       
       // Không gọi update() để tránh rebuild toàn bộ UI
-      // Thay vào đó, chỉ cập nhật giá trị để Obx sẽ tự động cập nhật UI ở những widget có sử dụng giá trị này
     }
   }
-
+  
   void previousQuestion() {
     if (currentQuestionIndex.value > 0) {
       // Giảm index câu hỏi
@@ -373,89 +374,8 @@ class QuizController extends GetxController {
       // Không gọi update() để tránh rebuild toàn bộ UI
     }
   }
-
-  Future<void> submitQuiz() async {
-    try {
-      // Dừng timer nếu đang chạy
-      if (timerRunning.value) {
-        stopTimer();
-      }
-      
-      isLoading.value = true;
-      errorMessage.value = '';
-
-      if (currentQuiz.value == null) {
-        Get.snackbar(
-          'Lỗi',
-          'Không thể nộp bài: Không tìm thấy thông tin bài kiểm tra',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
-        return;
-      }
-      
-      if (questions.isEmpty) {
-        Get.snackbar(
-          'Lỗi',
-          'Không thể nộp bài: Không có câu hỏi nào',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
-        return;
-      }
-      
-      // Đảm bảo userAnswers có đúng kích thước
-      if (userAnswers.length != questions.length) {
-        userAnswers.value = List.filled(questions.length, -1);
-      }
-
-      // Tính điểm
-      score.value = 0;
-      for (int i = 0; i < questions.length; i++) {
-        
-        if (i < userAnswers.length && userAnswers[i] == questions[i].correctOption) {
-          score.value++;
-        }
-      }
-
-      try {
-        // Lưu kết quả vào Firestore
-        await submitQuizResultUseCase.execute(
-          userId: loginController.googleUserEmail.value,
-          userName: loginController.googleUserName.value,
-          quizId: currentQuiz.value!.id,
-          quizTitle: currentQuiz.value!.title,
-          score: score.value,
-          totalQuestions: questions.length,
-          answers: userAnswers,
-          timeSpent: (currentQuiz.value!.timeLimit * 60 - timeRemaining.value),
-        );
-      } catch (e) {
-        print('Lỗi khi lưu kết quả quiz: $e');
-        // Vẫn tiếp tục hiển thị kết quả ngay cả khi không lưu được
-      }
-
-      // Hiển thị kết quả
-      showResults.value = true;
-      update();
-    } catch (e) {
-      errorMessage.value = 'Lỗi khi nộp bài: $e';
-      print('Lỗi khi nộp bài: $e');
-      
-      Get.snackbar(
-        'Lỗi',
-        'Không thể nộp bài kiểm tra: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
+  
+  // Reset quiz state
   void resetQuiz() {
     try {
       // Dừng timer nếu đang chạy
@@ -485,15 +405,15 @@ class QuizController extends GetxController {
         isLoading.value = false;
       });
     } catch (e) {
-      print('Lỗi khi reset quiz: $e');
+      print('Error resetting quiz: $e');
       
       // Đảm bảo isLoading được đặt về false trong mọi trường hợp
       isLoading.value = false;
       
       // Hiển thị thông báo nếu có lỗi
       Get.snackbar(
-        'Lỗi',
-        'Không thể quay lại danh sách: $e',
+        'Error',
+        'Cannot return to list: $e',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -507,8 +427,91 @@ class QuizController extends GetxController {
     return (currentQuestionIndex.value + 1) / questions.length;
   }
   
+  // Get number of answered questions
   int get answeredQuestions {
     return userAnswers.where((answer) => answer >= 0).length;
+  }
+  
+  // Submit quiz
+  Future<void> submitQuiz() async {
+    try {
+      // Dừng timer nếu đang chạy
+      if (timerRunning.value) {
+        stopTimer();
+      }
+      
+      isLoading.value = true;
+      errorMessage.value = '';
+
+      if (currentQuiz.value == null) {
+        Get.snackbar(
+          'Error',
+          'Cannot submit quiz: Quiz information not found',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return;
+      }
+      
+      if (questions.isEmpty) {
+        Get.snackbar(
+          'Error',
+          'Cannot submit quiz: No questions available',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return;
+      }
+      
+      // Đảm bảo userAnswers có đúng kích thước
+      if (userAnswers.length != questions.length) {
+        userAnswers.value = List.filled(questions.length, -1);
+      }
+
+      // Calculate score
+      score.value = 0;
+      for (int i = 0; i < questions.length; i++) {
+        if (i < userAnswers.length && userAnswers[i] == questions[i].correctOption) {
+          score.value++;
+        }
+      }
+
+      try {
+        // Submit score to backend if user is logged in
+        await submitQuizResultUseCase.execute(
+          userId: loginController.googleUserEmail.value,
+          userName: loginController.googleUserName.value,
+          quizId: currentQuiz.value!.id,
+          quizTitle: currentQuiz.value!.title,
+          score: score.value,
+          totalQuestions: questions.length,
+          answers: userAnswers,
+          timeSpent: (currentQuiz.value!.timeLimit * 60 - timeRemaining.value),
+        );
+      } catch (e) {
+        print('Error saving quiz results: $e');
+        // Vẫn tiếp tục hiển thị kết quả ngay cả khi không lưu được
+      }
+      
+      // Show results
+      showResults.value = true;
+      update();
+    } catch (e) {
+      errorMessage.value = 'Error submitting quiz: $e';
+      print('Error submitting quiz: $e');
+      
+      Get.snackbar(
+        'Error',
+        'Failed to submit quiz: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   @override

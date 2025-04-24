@@ -35,7 +35,7 @@ class EventPage extends StatelessWidget {
                 children: [
                   Center(
                     child: Text(
-                      'Sự kiện',
+                      'Events',
                       style: GoogleFonts.lexend(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,

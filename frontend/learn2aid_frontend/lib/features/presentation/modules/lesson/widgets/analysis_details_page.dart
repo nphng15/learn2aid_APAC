@@ -18,7 +18,7 @@ class AnalysisDetailsPage extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         title: const Text(
-          'Kết quả phân tích',
+          'Analysis Results',
           style: TextStyle(
             color: Color(0xff215273),
             fontWeight: FontWeight.bold,
@@ -36,7 +36,7 @@ class AnalysisDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Điểm tổng hợp
+            // Overall Score
             Center(
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
@@ -63,7 +63,7 @@ class AnalysisDetailsPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 5),
                     const Text(
-                      'Điểm tổng quan',
+                      'Overall Score',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
@@ -76,9 +76,9 @@ class AnalysisDetailsPage extends StatelessWidget {
             
             const SizedBox(height: 30),
             
-            // Chi tiết điểm
+            // Detailed Scores
             const Text(
-              'Đánh giá chi tiết',
+              'Detailed Assessment',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -88,7 +88,7 @@ class AnalysisDetailsPage extends StatelessWidget {
             
             const SizedBox(height: 16),
             
-            // Bảng chi tiết điểm
+            // Score details table
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey.shade300),
@@ -111,7 +111,7 @@ class AnalysisDetailsPage extends StatelessWidget {
                         Expanded(
                           flex: 3,
                           child: Text(
-                            'Danh mục',
+                            'Category',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -122,7 +122,7 @@ class AnalysisDetailsPage extends StatelessWidget {
                         Expanded(
                           flex: 1,
                           child: Text(
-                            'Điểm',
+                            'Score',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -135,7 +135,7 @@ class AnalysisDetailsPage extends StatelessWidget {
                     ),
                   ),
                   
-                  // Hiển thị các hàng dựa vào scoreBreakdown
+                  // Display rows based on scoreBreakdown
                   if (analysis.scoreBreakdown.isEmpty)
                     _buildScoreRow('Overall', '${analysis.score.round()}/100')
                   else
@@ -151,9 +151,9 @@ class AnalysisDetailsPage extends StatelessWidget {
             
             const SizedBox(height: 30),
             
-            // Điểm mạnh
+            // Strengths
             const Text(
-              'Điểm mạnh',
+              'Strengths',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -163,7 +163,7 @@ class AnalysisDetailsPage extends StatelessWidget {
             
             const SizedBox(height: 12),
             
-            // Danh sách điểm mạnh
+            // Strengths list
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -181,10 +181,10 @@ class AnalysisDetailsPage extends StatelessWidget {
             
             const SizedBox(height: 30),
             
-            // Cần cải thiện
+            // Areas to improve
             if (analysis.improvements.isNotEmpty) ...[
               const Text(
-                'Điểm cần cải thiện',
+                'Areas to Improve',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -194,7 +194,7 @@ class AnalysisDetailsPage extends StatelessWidget {
               
               const SizedBox(height: 12),
               
-              // Danh sách điểm cần cải thiện trong container
+              // List of areas to improve in container
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -277,36 +277,35 @@ class AnalysisDetailsPage extends StatelessWidget {
   
   String _formatCategoryName(String category) {
     Map<String, String> categoryTranslations = {
-      'hand_position': 'Vị trí tay',
-      'compression_depth': 'Độ sâu ép tim',
-      'compression_rate': 'Tốc độ ép tim',
-      'body_posture': 'Tư thế cơ thể',
-      'arm_position': 'Vị trí cánh tay',
-      'elbow_angle': 'Góc khuỷu tay',
-      'hand_placement': 'Vị trí đặt tay',
-      'chest_recoil': 'Hồi phục lồng ngực',
-      'rhythm': 'Nhịp điệu',
-      'overall': 'Tổng thể',
-      'technique': 'Kỹ thuật',
-      'form': 'Hình thức',
-      'consistency': 'Tính nhất quán',
-      'effectiveness': 'Hiệu quả',
-      'speed': 'Tốc độ',
-      'posture': 'Tư thế',
-      'stability': 'Độ ổn định',
-      'breathing': 'Hơi thở',
-      'offline_mode': 'Chế độ ngoại tuyến'
+      'hand_position': 'Hand Position',
+      'compression_depth': 'Compression Depth',
+      'compression_rate': 'Compression Rate',
+      'body_posture': 'Body Posture',
+      'arm_position': 'Arm Position',
+      'elbow_angle': 'Elbow Angle',
+      'hand_placement': 'Hand Placement',
+      'chest_recoil': 'Chest Recoil',
+      'rhythm': 'Rhythm',
+      'overall': 'Overall',
+      'technique': 'Technique',
+      'form': 'Form',
+      'consistency': 'Consistency',
+      'effectiveness': 'Effectiveness',
+      'speed': 'Speed',
+      'posture': 'Posture',
+      'stability': 'Stability',
+      'breathing': 'Breathing',
+      'offline_mode': 'Offline Mode'
     };
     
-    // Trả về bản dịch nếu có, nếu không thì định dạng chuỗi gốc
+    // Return translation if available, otherwise format the original string
     if (categoryTranslations.containsKey(category.toLowerCase())) {
       return categoryTranslations[category.toLowerCase()]!;
     }
     
-    // Nếu không có bản dịch, định dạng theo cách thông thường
-    return category
-      .split('_')
-      .map((word) => word.isEmpty ? '' : '${word[0].toUpperCase()}${word.substring(1)}')
-      .join(' ');
+    // If no translation available, format in the usual way
+    return category.split('_').map((word) => 
+      word.isNotEmpty ? '${word[0].toUpperCase()}${word.substring(1)}' : ''
+    ).join(' ');
   }
 } 

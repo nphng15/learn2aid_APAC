@@ -20,19 +20,19 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   void _navigateToNextScreen() async {
-    await Future.delayed(const Duration(seconds: 2)); // Hiệu ứng loading
+    await Future.delayed(const Duration(seconds: 2)); // Loading effect
     
     if (authController.authToken.isNotEmpty) {
-      Get.offAllNamed(AppRoutes.dashboard); // Đã đăng nhập → vào Dashboard
+      Get.offAllNamed(AppRoutes.dashboard); // Already logged in → go to Dashboard
     } else {
-      Get.offAllNamed(AppRoutes.login); // Chưa đăng nhập → vào Login
+      Get.offAllNamed(AppRoutes.login); // Not logged in → go to Login
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Nền trắng
+      backgroundColor: Colors.white, // White background
       body: SafeArea(
         child: Center(
           child: Column(
@@ -46,11 +46,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Hiệu ứng 4 dots loading
+              // Loading animation
               const CircularProgressIndicator(),
               const SizedBox(height: 20),
 
-              // Tiêu đề "Learn2Aid"
+              // "Learn2Aid" title
               const Text.rich(
                 TextSpan(
                   children: [

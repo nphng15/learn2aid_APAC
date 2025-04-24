@@ -23,6 +23,15 @@ class ProfileScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: AppColors.secondary),
           onPressed: () => Get.back(),
         ),
+        title: Text(
+          'Profile',
+          style: GoogleFonts.lexend(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: AppColors.secondary,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -43,7 +52,7 @@ class ProfileScreen extends StatelessWidget {
               
               SizedBox(height: 20 / 932 * screenHeight),
               
-              // Tên người dùng
+              // User name
               Obx(() => Text(
                 profileController.userName.value,
                 style: GoogleFonts.lexend(
@@ -66,9 +75,9 @@ class ProfileScreen extends StatelessWidget {
               
               SizedBox(height: 40 / 932 * screenHeight),
               
-              // Các thông tin khác có thể thêm ở đây
+              // Other information can be added here
               
-              // Nút gửi phản hồi
+              // Send feedback button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -81,7 +90,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'Gửi phản hồi',
+                    'Send Feedback',
                     style: GoogleFonts.lexend(
                       fontSize: 16 / 932 * screenHeight,
                       color: AppColors.white,
@@ -92,7 +101,7 @@ class ProfileScreen extends StatelessWidget {
               
               SizedBox(height: 16 / 932 * screenHeight),
               
-              // Nút xóa dữ liệu local
+              // Clear local data button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -105,7 +114,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'Xóa dữ liệu lưu cục bộ',
+                    'Clear Local Data',
                     style: GoogleFonts.lexend(
                       fontSize: 16 / 932 * screenHeight,
                       color: AppColors.white,
@@ -116,7 +125,7 @@ class ProfileScreen extends StatelessWidget {
               
               SizedBox(height: 16 / 932 * screenHeight),
               
-              // Nút đăng xuất
+              // Log out button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -129,7 +138,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'Đăng xuất',
+                    'Log Out',
                     style: GoogleFonts.lexend(
                       fontSize: 16 / 932 * screenHeight,
                       color: AppColors.white,
@@ -144,21 +153,21 @@ class ProfileScreen extends StatelessWidget {
     );
   }
   
-  // Hiển thị hộp thoại xác nhận xóa dữ liệu
+  // Show data deletion confirmation dialog
   void _showClearDataConfirmation(BuildContext context, ProfileController controller) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Xác nhận xóa dữ liệu'),
+        title: const Text('Confirm Data Deletion'),
         content: const Text(
-          'Bạn có chắc chắn muốn xóa tất cả dữ liệu đã lưu cục bộ? '
-          'Các tiến trình xem video, danh sách video đã hoàn thành và đang xem sẽ bị xóa. '
-          'Hành động này không thể hoàn tác.'
+          'Are you sure you want to delete all locally saved data? '
+          'Your video watching progress, completed and in-progress video lists will be deleted. '
+          'This action cannot be undone.'
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Hủy'),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
@@ -168,7 +177,7 @@ class ProfileScreen extends StatelessWidget {
             style: TextButton.styleFrom(
               foregroundColor: Colors.red,
             ),
-            child: const Text('Xóa'),
+            child: const Text('Delete'),
           ),
         ],
       ),

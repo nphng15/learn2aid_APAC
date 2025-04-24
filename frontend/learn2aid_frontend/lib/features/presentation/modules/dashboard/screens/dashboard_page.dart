@@ -19,21 +19,21 @@ class DashboardPage extends StatelessWidget {
                 physics: const BouncingScrollPhysics(),
                 child: Column(
                   children: [
-                    // Section video đề xuất cho người dùng
+                    // Recommended videos for you section
                     const DashboardSection(
-                      title: "Dành cho bạn",
+                      title: "For You",
                       sectionType: "for_you",
                     ),
                     
-                    // Section video đang xem dở
+                    // In progress videos section
                     const DashboardSection(
-                      title: "Đang học",
+                      title: "In Progress",
                       sectionType: "in_progress",
                     ),
                     
-                    // Section video đã hoàn thành
+                    // Completed videos section
                     const DashboardSection(
-                      title: "Đã hoàn thành", 
+                      title: "Completed", 
                       sectionType: "completed",
                     ),
                   ],

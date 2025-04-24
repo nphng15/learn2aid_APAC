@@ -18,7 +18,7 @@ class DashboardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Nếu không có video, trả về card rỗng
+    // Return empty card if no video
     if (video == null) {
       return Container(
         width: cardWidth,
@@ -31,11 +31,11 @@ class DashboardCard extends StatelessWidget {
       );
     }
     
-    // Nếu có video, hiển thị thông tin video
+    // Display video information if video exists
     return GestureDetector(
       onTap: () {
         if (videoController != null) {
-          // Lưu video đang được chọn vào controller
+          // Save selected video to controller
           videoController!.setSelectedVideo(video!);
           
           Get.toNamed('/lesson', arguments: {
@@ -64,7 +64,7 @@ class DashboardCard extends StatelessWidget {
               ),
               child: Stack(
                 children: [
-                  // Hình nền video
+                  // Video background
                   Image.network(
                     video!.thumbnailUrl,
                     width: cardWidth,
@@ -78,7 +78,7 @@ class DashboardCard extends StatelessWidget {
                       child: const Icon(Icons.error),
                     ),
                   ),
-                  // Thời lượng video
+                  // Video duration
                   Positioned(
                     right: 8,
                     bottom: 8,
@@ -137,7 +137,7 @@ class DashboardCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   
-                  // Danh mục
+                  // Category
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 6.0,

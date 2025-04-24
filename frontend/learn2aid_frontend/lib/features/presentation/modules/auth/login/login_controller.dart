@@ -16,13 +16,13 @@ class LoginController extends GetxController {
   var errorMessage = ''.obs;
   var authToken = ''.obs;
   
-  // Thông tin người dùng Google
+  // Google user information
   var googleUserEmail = ''.obs;
   var googleUserName = ''.obs;
   var googleUserPhotoUrl = ''.obs;
   var googleAccessToken = ''.obs;
 
-  // Đăng nhập với email & password 
+  // Login with email & password 
   Future<void> loginUser() async {
     isLoading.value = true;
     errorMessage.value = '';
@@ -44,7 +44,7 @@ class LoginController extends GetxController {
     }
   }
 
-  // Đăng nhập với Google
+  // Login with Google
   Future<void> loginWithGoogle() async {
     try {
       isLoading.value = true;
@@ -53,10 +53,10 @@ class LoginController extends GetxController {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) {
         isLoading.value = false;
-        return; // Người dùng hủy đăng nhập
+        return; // User cancelled sign-in
       }
 
-      // Lấy thông tin người dùng từ Google
+      // Get user information from Google
       googleUserEmail.value = googleUser.email;
       googleUserName.value = googleUser.displayName ?? '';
       googleUserPhotoUrl.value = googleUser.photoUrl ?? '';
@@ -64,7 +64,7 @@ class LoginController extends GetxController {
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
       
-      // Lưu access token
+      // Save access token
       googleAccessToken.value = googleAuth.accessToken ?? '';
 
       final AuthCredential credential = GoogleAuthProvider.credential(
@@ -91,12 +91,12 @@ class LoginController extends GetxController {
     }
   }
 
-  // Đăng xuất
+  // Log out
   Future<void> logout() async {
     await _auth.signOut();
     await GoogleSignIn().signOut();
     authToken.value = '';
-    // Xóa thông tin Google
+    // Clear Google information
     googleUserEmail.value = '';
     googleUserName.value = '';
     googleUserPhotoUrl.value = '';

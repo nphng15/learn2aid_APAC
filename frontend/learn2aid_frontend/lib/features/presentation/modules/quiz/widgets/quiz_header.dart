@@ -24,7 +24,7 @@ class QuizHeader extends StatelessWidget {
         ],
       ),
       child: Obx(() {
-        // Nếu đang hiển thị danh sách quiz
+        // If showing quiz list
         if (quizController.currentQuiz.value == null) {
           return Row(
             children: [
@@ -38,7 +38,7 @@ class QuizHeader extends StatelessWidget {
               // const SizedBox(width: 8),
               Center(
                 child: Text(
-                  'Bài kiểm tra',
+                  'Quizzes',
                   style: GoogleFonts.lexend(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -50,13 +50,13 @@ class QuizHeader extends StatelessWidget {
           );
         }
 
-        // Nếu đang làm bài kiểm tra
+        // If taking the quiz
         return Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Nút quay lại và tiêu đề
+                // Back button and title
                 Row(
                   children: [
                     IconButton(
@@ -64,11 +64,11 @@ class QuizHeader extends StatelessWidget {
                         if (quizController.showResults.value) {
                           quizController.resetQuiz();
                         } else {
-                          // Hiển thị dialog xác nhận thoát
+                          // Show exit confirmation dialog
                           Get.dialog(
                             AlertDialog(
                               title: Text(
-                                'Thoát bài kiểm tra?',
+                                'Exit Quiz?',
                                 style: GoogleFonts.lexend(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
@@ -76,7 +76,7 @@ class QuizHeader extends StatelessWidget {
                                 ),
                               ),
                               content: Text(
-                                'Bài làm của bạn sẽ không được lưu. Bạn có chắc chắn muốn thoát?',
+                                'Your answers will not be saved. Are you sure you want to exit?',
                                 style: GoogleFonts.lexend(
                                   fontSize: 14,
                                   color: AppColors.grey3,
@@ -86,7 +86,7 @@ class QuizHeader extends StatelessWidget {
                                 TextButton(
                                   onPressed: () => Get.back(),
                                   child: Text(
-                                    'Hủy',
+                                    'Cancel',
                                     style: GoogleFonts.lexend(
                                       color: AppColors.grey3,
                                     ),
@@ -102,7 +102,7 @@ class QuizHeader extends StatelessWidget {
                                     foregroundColor: Colors.white,
                                   ),
                                   child: Text(
-                                    'Thoát',
+                                    'Exit',
                                     style: GoogleFonts.lexend(),
                                   ),
                                 ),
@@ -132,7 +132,7 @@ class QuizHeader extends StatelessWidget {
                   ],
                 ),
 
-                // Thời gian (chỉ hiển thị khi đang làm bài, không hiển thị ở trang kết quả)
+                // Timer (only displayed when taking the quiz, not on results page)
                 if (!quizController.showResults.value)
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -165,7 +165,7 @@ class QuizHeader extends StatelessWidget {
               ],
             ),
 
-            // Thanh tiến trình làm bài (chỉ hiển thị khi đang làm bài, không hiển thị ở trang kết quả)
+            // Progress bar (only displayed when taking the quiz, not on results page)
             if (!quizController.showResults.value && quizController.questions.isNotEmpty)
               Column(
                 children: [
@@ -173,7 +173,7 @@ class QuizHeader extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        'Câu ${quizController.currentQuestionIndex.value + 1}/${quizController.questions.length}',
+                        'Question ${quizController.currentQuestionIndex.value + 1}/${quizController.questions.length}',
                         style: GoogleFonts.lexend(
                           fontSize: 12,
                           color: AppColors.grey3,
@@ -181,7 +181,7 @@ class QuizHeader extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '(Đã trả lời: ${quizController.answeredQuestions})',
+                        '(Answered: ${quizController.answeredQuestions})',
                         style: GoogleFonts.lexend(
                           fontSize: 12,
                           color: AppColors.grey3,

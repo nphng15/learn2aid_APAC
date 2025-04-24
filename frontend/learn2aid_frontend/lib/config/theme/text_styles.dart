@@ -8,42 +8,42 @@ class AppTextStyles {
   static TextStyle title40 = GoogleFonts.lexend(
     fontSize: 40,
     fontWeight: FontWeight.bold,
-    color: AppColors.secondary, // Màu xanh lá
+    color: AppColors.secondary, // Green color
   );
 
   // Button Text
   static TextStyle button24 = GoogleFonts.lexend(
     fontSize: 24,
     fontWeight: FontWeight.w500,
-    color: AppColors.white, // Trắng
+    color: AppColors.white, // White
   );
 
   // Input Placeholder Text
   static TextStyle inputText16 = GoogleFonts.lexend(
     fontSize: 16,
     fontWeight: FontWeight.w400,
-    color: AppColors.grey3, // Xám đậm
+    color: AppColors.grey3, // Dark grey
   );
 
   // Small Text (Forgot Password, Or Login With)
   static TextStyle smallText14 = GoogleFonts.lexend(
     fontSize: 14,
     fontWeight: FontWeight.w400,
-    color: AppColors.grey3, // Xám đậm
+    color: AppColors.grey3, // Dark grey
   );
 
   // Register Link
   static TextStyle link14 = GoogleFonts.lexend(
     fontSize: 14,
     fontWeight: FontWeight.w500,
-    color: AppColors.secondary, // Xanh lá
+    color: AppColors.secondary, // Green
   );
 
   // Error Message Text
   static TextStyle error15 = GoogleFonts.nunitoSans(
     fontSize: 15,
     fontWeight: FontWeight.w400,
-    color: AppColors.error, // Đỏ cảnh báo
+    color: AppColors.error, // Warning red
   );
 
   static TextStyle bold36 = GoogleFonts.lexend(

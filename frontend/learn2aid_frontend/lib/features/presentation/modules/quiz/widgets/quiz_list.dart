@@ -26,7 +26,7 @@ class QuizList extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Không có bài kiểm tra nào',
+                  'No quizzes available',
                   style: GoogleFonts.lexend(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
@@ -35,7 +35,7 @@ class QuizList extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Hãy quay lại sau',
+                  'Please check back later',
                   style: GoogleFonts.lexend(
                     fontSize: 14,
                     color: AppColors.grey3,
@@ -50,7 +50,7 @@ class QuizList extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Danh sách bài kiểm tra',
+              'Quiz List',
               style: GoogleFonts.lexend(
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
@@ -81,8 +81,8 @@ class QuizList extends StatelessWidget {
       onTap: () {
         if (controller.isLoading.value || controller.quizInitializing.value) {
           Get.snackbar(
-            'Thông báo',
-            'Đang xử lý, vui lòng đợi...',
+            'Notice',
+            'Processing, please wait...',
             duration: const Duration(seconds: 1),
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.blue.withOpacity(0.7),
@@ -133,7 +133,7 @@ class QuizList extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    '${quiz.timeLimit} phút',
+                    '${quiz.timeLimit} minutes',
                     style: GoogleFonts.lexend(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
@@ -163,7 +163,7 @@ class QuizList extends StatelessWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  '${quiz.totalQuestions} câu hỏi',
+                  '${quiz.totalQuestions} questions',
                   style: GoogleFonts.lexend(
                     fontSize: 12,
                     color: AppColors.grey3,
@@ -174,8 +174,8 @@ class QuizList extends StatelessWidget {
                   onTap: () {
                     if (controller.isLoading.value || controller.quizInitializing.value) {
                       Get.snackbar(
-                        'Thông báo',
-                        'Đang xử lý, vui lòng đợi...',
+                        'Notice',
+                        'Processing, please wait...',
                         duration: const Duration(seconds: 1),
                         snackPosition: SnackPosition.BOTTOM,
                         backgroundColor: Colors.blue.withOpacity(0.7),
@@ -197,7 +197,7 @@ class QuizList extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      'Bắt đầu',
+                      'Start',
                       style: GoogleFonts.lexend(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,

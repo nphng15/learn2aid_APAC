@@ -67,7 +67,7 @@ class AnalysisResultDialog extends StatelessWidget {
           children: [
             // Tiêu đề kết quả
             const Text(
-              'Kết quả phân tích',
+              'Analysis Results',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -156,7 +156,7 @@ class AnalysisResultDialog extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                     child: const Text(
-                      'Xem chi tiết',
+                      'View Details',
                       style: TextStyle(
                         color: Color(0xff215273),
                         fontWeight: FontWeight.w600,
@@ -185,8 +185,8 @@ class AnalysisResultDialog extends StatelessWidget {
                         // Hiển thị thông báo nếu điểm > 80
                         if (analysis.score > 80) {
                           Get.snackbar(
-                            'Chúc mừng!',
-                            'Bạn đã hoàn thành video này với điểm ${analysis.score.round()}',
+                            'Congratulations!',
+                            'You have completed this video with a score of ${analysis.score.round()}',
                             snackPosition: SnackPosition.BOTTOM,
                             backgroundColor: const Color(0xff55c595),
                             colorText: Colors.white,
@@ -196,8 +196,8 @@ class AnalysisResultDialog extends StatelessWidget {
                       } else {
                         print('DEBUG - ERROR: videoId rỗng trong Continue button');
                         Get.snackbar(
-                          'Lỗi',
-                          'Không thể đánh dấu video hoàn thành: ID không hợp lệ',
+                          'Error',
+                          'Cannot mark video as completed: Invalid ID',
                           snackPosition: SnackPosition.BOTTOM,
                           backgroundColor: Colors.red,
                           colorText: Colors.white,
@@ -214,7 +214,7 @@ class AnalysisResultDialog extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                     child: const Text(
-                      'Tiếp tục',
+                      'Continue',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
@@ -238,6 +238,6 @@ class AnalysisResultDialog extends StatelessWidget {
     } else if (analysis.analysis.isNotEmpty) {
       return analysis.analysis;
     }
-    return "Chuyển động của bạn đã được phân tích!";
+    return "Your movement has been analyzed!";
   }
 } 

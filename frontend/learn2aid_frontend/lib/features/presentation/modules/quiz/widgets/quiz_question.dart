@@ -12,10 +12,10 @@ class QuizQuestion extends StatelessWidget {
   Widget build(BuildContext context) {
     final QuizController quizController = Get.find<QuizController>();
 
-    // Sử dụng kết hợp GetBuilder và Obx để tối ưu hiệu năng
+    // Use both GetBuilder and Obx for optimized performance
     return GetBuilder<QuizController>(
       builder: (_) {
-        // Hiển thị loading khi đang tải câu hỏi và chưa có câu hỏi
+        // Display loading when loading questions and no questions yet
         if (quizController.isLoading.value && quizController.questions.isEmpty) {
           return Center(
             child: Column(
@@ -26,7 +26,7 @@ class QuizQuestion extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Đang tải câu hỏi...',
+                  'Loading questions...',
                   style: GoogleFonts.lexend(
                     fontSize: 16,
                     color: AppColors.grey3,
@@ -37,7 +37,7 @@ class QuizQuestion extends StatelessWidget {
           );
         }
         
-        // Kiểm tra xem có questions hay không
+        // Check if there are questions
         if (quizController.questions.isEmpty) {
           return Center(
             child: Column(
@@ -50,7 +50,7 @@ class QuizQuestion extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Không có câu hỏi nào',
+                  'No questions available',
                   style: GoogleFonts.lexend(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
@@ -65,7 +65,7 @@ class QuizQuestion extends StatelessWidget {
                     foregroundColor: Colors.white,
                   ),
                   child: Text(
-                    'Quay lại',
+                    'Go Back',
                     style: GoogleFonts.lexend(),
                   ),
                 ),
@@ -74,18 +74,18 @@ class QuizQuestion extends StatelessWidget {
           );
         }
 
-        // Sử dụng Obx cho phần nội dung câu hỏi để chỉ cập nhật khi currentQuestionIndex thay đổi
+        // Use Obx for question content to only update when currentQuestionIndex changes
         return Obx(() {
           final currentIndex = quizController.currentQuestionIndex.value;
           
-          // Kiểm tra index hợp lệ
+          // Check for valid index
           if (currentIndex < 0 || currentIndex >= quizController.questions.length) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Lỗi: Câu hỏi không hợp lệ',
+                    'Error: Invalid question',
                     style: GoogleFonts.lexend(
                       fontSize: 18,
                       color: AppColors.error,
@@ -99,7 +99,7 @@ class QuizQuestion extends StatelessWidget {
                       foregroundColor: Colors.white,
                     ),
                     child: Text(
-                      'Quay lại',
+                      'Go Back',
                       style: GoogleFonts.lexend(),
                     ),
                   ),
@@ -108,25 +108,25 @@ class QuizQuestion extends StatelessWidget {
             );
           }
 
-          // Lấy thông tin câu hỏi và câu trả lời đã chọn
+          // Get current question and selected answer
           final currentQuestion = quizController.questions[currentIndex];
           
-          // Kiểm tra độ dài mảng userAnswers
+          // Check userAnswers length
           if (quizController.userAnswers.length != quizController.questions.length) {
-            // Tự động khởi tạo lại nếu không khớp
+            // Automatically reinitialize if mismatch
             quizController.userAnswers.value = List.filled(quizController.questions.length, -1);
           }
           
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Câu hỏi
+              // Question
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Hiển thị hình ảnh (nếu có)
+                      // Display image if available
                       if (currentQuestion.imageUrl != null && currentQuestion.imageUrl!.isNotEmpty)
                         Container(
                           height: 200,
@@ -141,7 +141,7 @@ class QuizQuestion extends StatelessWidget {
                           ),
                         ),
                       
-                      // Text câu hỏi
+                      // Question text
                       Text(
                         currentQuestion.text,
                         style: GoogleFonts.lexend(
@@ -152,7 +152,7 @@ class QuizQuestion extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       
-                      // Các lựa chọn - Sử dụng Obx riêng cho phần lựa chọn đáp án
+                      // Options - Use separate Obx for answer selection section
                       ...List.generate(
                         currentQuestion.options.length,
                         (index) => Obx(() => Padding(
@@ -172,17 +172,17 @@ class QuizQuestion extends StatelessWidget {
               
               const SizedBox(height: 16),
               
-              // Nút điều hướng
+              // Navigation buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Nút quay lại
+                  // Back button
                   Material(
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: currentIndex > 0 
                           ? () {
-                              // Thêm phản hồi xúc giác
+                              // Add haptic feedback
                               HapticFeedback.mediumImpact();
                               quizController.previousQuestion();
                             }
@@ -213,7 +213,7 @@ class QuizQuestion extends StatelessWidget {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              'Trước',
+                              'Previous',
                               style: GoogleFonts.lexend(
                                 fontSize: 14,
                                 color: currentIndex > 0 
@@ -227,22 +227,22 @@ class QuizQuestion extends StatelessWidget {
                     ),
                   ),
                   
-                  // Nút tiếp theo/nộp bài
+                  // Next/Submit button
                   Material(
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () {
-                        // Thêm phản hồi xúc giác
+                        // Add haptic feedback
                         HapticFeedback.mediumImpact();
                         
                         if (currentIndex < quizController.questions.length - 1) {
                           quizController.nextQuestion();
                         } else {
-                          // Hiển thị dialog xác nhận nộp bài
+                          // Show confirmation dialog for submission
                           Get.dialog(
                             AlertDialog(
                               title: Text(
-                                'Nộp bài?',
+                                'Submit Quiz?',
                                 style: GoogleFonts.lexend(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
@@ -250,7 +250,7 @@ class QuizQuestion extends StatelessWidget {
                                 ),
                               ),
                               content: Text(
-                                'Bạn đã trả lời ${quizController.answeredQuestions}/${quizController.questions.length} câu hỏi. Bạn có chắc chắn muốn nộp bài?',
+                                'You have answered ${quizController.answeredQuestions}/${quizController.questions.length} questions. Are you sure you want to submit?',
                                 style: GoogleFonts.lexend(
                                   fontSize: 14,
                                   color: AppColors.grey3,
@@ -260,7 +260,7 @@ class QuizQuestion extends StatelessWidget {
                                 TextButton(
                                   onPressed: () => Get.back(),
                                   child: Text(
-                                    'Hủy',
+                                    'Cancel',
                                     style: GoogleFonts.lexend(
                                       color: AppColors.grey3,
                                     ),
@@ -276,7 +276,7 @@ class QuizQuestion extends StatelessWidget {
                                     foregroundColor: Colors.white,
                                   ),
                                   child: Text(
-                                    'Nộp bài',
+                                    'Submit',
                                     style: GoogleFonts.lexend(),
                                   ),
                                 ),
@@ -299,8 +299,8 @@ class QuizQuestion extends StatelessWidget {
                           children: [
                             Text(
                               currentIndex < quizController.questions.length - 1
-                                  ? 'Tiếp theo'
-                                  : 'Nộp bài',
+                                  ? 'Next'
+                                  : 'Submit',
                               style: GoogleFonts.lexend(
                                 fontSize: 14,
                                 color: Colors.white,
@@ -337,12 +337,12 @@ class QuizQuestion extends StatelessWidget {
     final optionLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
     final optionLabel = index < optionLabels.length ? optionLabels[index] : index.toString();
 
-    // Sử dụng InkWell thay vì GestureDetector để có hiệu ứng khi nhấn
+    // Use InkWell instead of GestureDetector for press effects
     return InkWell(
       onTap: () {
-        // Thêm phản hồi trực quan ngay lập tức
+        // Add immediate visual feedback
         HapticFeedback.selectionClick();
-        // Gọi callback
+        // Call callback
         onTap();
       },
       borderRadius: BorderRadius.circular(8),

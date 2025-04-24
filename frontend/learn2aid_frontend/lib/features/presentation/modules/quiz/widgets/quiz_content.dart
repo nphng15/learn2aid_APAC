@@ -18,7 +18,7 @@ class QuizContent extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: GetBuilder<QuizController>(
         builder: (_) {
-          // Hiển thị trạng thái loading
+          // Display loading state
           if (quizController.isLoading.value) {
             return Center(
               child: Column(
@@ -30,7 +30,7 @@ class QuizContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Đang tải bài kiểm tra...',
+                    'Loading quiz...',
                     style: GoogleFonts.lexend(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -38,9 +38,9 @@ class QuizContent extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  // Hiển thị thông báo để người dùng biết quá trình đang diễn ra
+                  // Display message to inform user about the process
                   Text(
-                    'Vui lòng đợi trong giây lát',
+                    'Please wait a moment',
                     style: GoogleFonts.lexend(
                       fontSize: 14,
                       color: AppColors.grey3,
@@ -51,7 +51,7 @@ class QuizContent extends StatelessWidget {
             );
           }
 
-          // Hiển thị lỗi nếu có
+          // Display error if exists
           if (quizController.errorMessage.value.isNotEmpty) {
             return Center(
               child: Column(
@@ -64,7 +64,7 @@ class QuizContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Đã xảy ra lỗi',
+                    'An error occurred',
                     style: GoogleFonts.lexend(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -94,7 +94,7 @@ class QuizContent extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      'Thử lại',
+                      'Try Again',
                       style: GoogleFonts.lexend(),
                     ),
                   ),
@@ -103,15 +103,15 @@ class QuizContent extends StatelessWidget {
             );
           }
 
-          // Hiển thị các màn hình khác nhau dựa trên trạng thái quiz
+          // Display different screens based on quiz state
           if (quizController.currentQuiz.value == null) {
-            // Hiển thị danh sách quiz (đã được tối ưu trong widget QuizList)
+            // Display quiz list (optimized in QuizList widget)
             return const QuizList();
           } else if (quizController.showResults.value) {
-            // Hiển thị kết quả quiz
+            // Display quiz results
             return const QuizResults();
           } else {
-            // Hiển thị câu hỏi quiz
+            // Display quiz question
             return const QuizQuestion();
           }
         },

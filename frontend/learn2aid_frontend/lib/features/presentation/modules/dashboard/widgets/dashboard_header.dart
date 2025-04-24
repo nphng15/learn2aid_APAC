@@ -30,7 +30,7 @@ class DashboardHeader extends StatelessWidget {
               focusNode: videoController.searchFocusNode,
               decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: 'Tìm kiếm video...',
+                hintText: 'Search videos...',
                 hintStyle: TextStyle(fontSize: 14, color: Colors.grey.shade600),
                 contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
                 isDense: true,
@@ -52,15 +52,15 @@ class DashboardHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final LoginController loginController = Get.find<LoginController>();
     
-    // Đảm bảo ProfileController được khởi tạo
+    // Make sure ProfileController is initialized
     if (!Get.isRegistered<ProfileController>()) {
       Get.put<ProfileController>(ProfileController());
     }
     
-    // Lấy ProfileController
+    // Get ProfileController
     final ProfileController profileController = Get.find<ProfileController>();
     
-    // Lấy tên người dùng từ tài khoản Google
+    // Get user name from Google account
     final String displayName = loginController.googleUserName.value.isNotEmpty
         ? _getFirstName(loginController.googleUserName.value)
         : "Name";
@@ -122,7 +122,7 @@ class DashboardHeader extends StatelessWidget {
                 ),
                 child: InkWell(
                   onTap: () {
-                    // Xóa focus khỏi thanh tìm kiếm trước khi hiển thị dialog
+                    // Remove focus from search field before showing dialog
                     FocusScope.of(context).unfocus();
                     _showFilterDialog(context);
                   },
@@ -140,21 +140,21 @@ class DashboardHeader extends StatelessWidget {
     );
   }
   
-  // Hiển thị hộp thoại xác nhận xóa dữ liệu
+  // Show data deletion confirmation dialog
   void _showClearDataConfirmation(BuildContext context, ProfileController controller) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Xác nhận xóa dữ liệu'),
+        title: const Text('Confirm Data Deletion'),
         content: const Text(
-          'Bạn có chắc chắn muốn xóa tất cả dữ liệu đã lưu cục bộ? '
-          'Các tiến trình xem video, danh sách video đã hoàn thành và đang xem sẽ bị xóa. '
-          'Hành động này không thể hoàn tác.'
+          'Are you sure you want to delete all locally saved data? '
+          'Your video watching progress, completed and in-progress video lists will be deleted. '
+          'This action cannot be undone.'
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Hủy'),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () async {
@@ -169,33 +169,33 @@ class DashboardHeader extends StatelessWidget {
             style: TextButton.styleFrom(
               foregroundColor: Colors.red,
             ),
-            child: const Text('Xóa'),
+            child: const Text('Delete'),
           ),
         ],
       ),
     );
   }
   
-  // Hàm lấy first name từ full name
+  // Get first name from full name
   String _getFirstName(String fullName) {
     if (fullName.isEmpty) return "Name";
     final nameParts = fullName.split(' ');
     return nameParts.first;
   }
   
-  // Hiển thị dialog cho filter
+  // Show filter dialog
   void _showFilterDialog(BuildContext context) {
     final VideoController videoController = Get.find<VideoController>();
     
     final categories = [
-      {'id': 'all', 'name': 'Tất cả'},
-      {'id': 'basic', 'name': 'Cơ bản'},
+      {'id': 'all', 'name': 'All'},
+      {'id': 'basic', 'name': 'Basic'},
       {'id': 'cpr', 'name': 'CPR'},
-      {'id': 'burns', 'name': 'Bỏng'},
-      {'id': 'wounds', 'name': 'Vết thương'},
-      {'id': 'fractures', 'name': 'Gãy xương'},
-      {'id': 'choking', 'name': 'Nghẹt thở'},
-      {'id': 'emergencies', 'name': 'Khẩn cấp'},
+      {'id': 'burns', 'name': 'Burns'},
+      {'id': 'wounds', 'name': 'Wounds'},
+      {'id': 'fractures', 'name': 'Fractures'},
+      {'id': 'choking', 'name': 'Choking'},
+      {'id': 'emergencies', 'name': 'Emergencies'},
     ];
     
     showDialog(
@@ -203,7 +203,7 @@ class DashboardHeader extends StatelessWidget {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return WillPopScope(
-          // Bảo đảm không focus vào thanh tìm kiếm khi thoát khỏi dialog bằng phím back
+          // Ensure search field doesn't get focus when exiting dialog with back button
           onWillPop: () async {
             FocusManager.instance.primaryFocus?.unfocus();
             return true;
@@ -213,7 +213,7 @@ class DashboardHeader extends StatelessWidget {
               borderRadius: BorderRadius.circular(15),
             ),
             title: const Text(
-              'Lọc video',
+              'Filter Videos',
               style: TextStyle(
                 color: Color(0xFF2A6F97),
                 fontWeight: FontWeight.bold,
@@ -233,32 +233,32 @@ class DashboardHeader extends StatelessWidget {
             actions: [
               TextButton(
                 onPressed: () {
-                  // Đảm bảo không focus vào thanh tìm kiếm sau khi đóng dialog
+                  // Ensure search field doesn't get focus after closing dialog
                   Navigator.of(context).pop();
                   FocusManager.instance.primaryFocus?.unfocus();
                 },
                 style: TextButton.styleFrom(
                   foregroundColor: const Color(0xFF2A6F97),
                 ),
-                child: const Text('Đóng'),
+                child: const Text('Close'),
               ),
             ],
           ),
         );
       },
     ).then((_) {
-      // Đảm bảo không focus vào thanh tìm kiếm sau khi dialog đóng
+      // Ensure search field doesn't get focus after dialog is closed
       FocusManager.instance.primaryFocus?.unfocus();
     });
   }
   
-  // Widget tạo option trong filter
+  // Widget to create filter option
   Widget _buildFilterOption(String title, String categoryId, BuildContext context, VideoController controller) {
     return InkWell(
       onTap: () {
         controller.changeCategory(categoryId);
         
-        // Đóng dialog
+        // Close dialog
         Navigator.of(context).pop();
       },
       child: Container(

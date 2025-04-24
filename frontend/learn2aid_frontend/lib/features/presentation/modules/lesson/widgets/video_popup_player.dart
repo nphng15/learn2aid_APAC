@@ -43,7 +43,7 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
     try {
       await _videoPlayerController.initialize();
       
-      // Thêm listener cho video player để xử lý sự kiện phát/dừng và cập nhật tiến trình
+      // Add listener to video player to handle play/pause events and update progress
       _videoPlayerController.addListener(_videoListener);
       
       setState(() {
@@ -51,17 +51,17 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
         _duration = _videoPlayerController.value.duration;
       });
       
-      // Tự động phát video
+      // Auto play video
       _videoPlayerController.play();
       _isPlaying = true;
     } catch (e) {
-      debugPrint('Lỗi khởi tạo video player: $e');
+      debugPrint('Error initializing video player: $e');
     }
   }
   
-  // Hàm xử lý sự kiện video
+  // Function to handle video events
   void _videoListener() {
-    // Cập nhật tiến trình xem video
+    // Update video watching progress
     final position = _videoPlayerController.value.position;
     final duration = _videoPlayerController.value.duration;
     
@@ -76,13 +76,13 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
     }
   }
   
-  // Hiển thị/ẩn điều khiển
+  // Show/hide controls
   void _toggleControls() {
     setState(() {
       _showControls = !_showControls;
     });
     
-    // Tự động ẩn điều khiển sau 3 giây
+    // Automatically hide controls after 3 seconds
     _hideTimer?.cancel();
     if (_showControls) {
       _hideTimer = Timer(const Duration(seconds: 3), () {
@@ -95,7 +95,7 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
     }
   }
   
-  // Chuyển đổi phát/dừng
+  // Toggle play/pause
   void _togglePlayPause() {
     setState(() {
       _isPlaying = !_isPlaying;
@@ -107,12 +107,12 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
     });
   }
   
-  // Chuyển đến vị trí cụ thể
+  // Seek to specific position
   void _seekTo(Duration position) {
     _videoPlayerController.seekTo(position);
   }
   
-  // Định dạng thời gian
+  // Format duration
   String _formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     final hours = twoDigits(duration.inHours);
@@ -125,33 +125,33 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
     return '$minutes:$seconds';
   }
 
-  // Chuyển đổi chế độ toàn màn hình
+  // Toggle fullscreen mode
   void _toggleFullScreen() {
     setState(() {
       _isFullScreen = !_isFullScreen;
     });
     
     if (_isFullScreen) {
-      // Xoay màn hình sang ngang
+      // Rotate screen to landscape
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.landscapeLeft,
         DeviceOrientation.landscapeRight,
       ]);
-      // Ẩn thanh trạng thái và thanh điều hướng
+      // Hide status bar and navigation bar
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     } else {
-      // Trở về chế độ dọc
+      // Return to portrait mode
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
       ]);
-      // Hiện lại thanh trạng thái và thanh điều hướng
+      // Show status bar and navigation bar
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     }
   }
 
   @override
   void dispose() {
-    // Đảm bảo trở về chế độ dọc khi thoát
+    // Ensure return to portrait mode when exiting
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -177,8 +177,8 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header với tiêu đề và nút đóng
-            if (!_isFullScreen) // Chỉ hiện header khi không ở chế độ toàn màn hình
+            // Header with title and close button
+            if (!_isFullScreen) // Only show header when not in fullscreen mode
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -198,7 +198,7 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
                     ),
                     Row(
                       children: [
-                        // Nút toàn màn hình
+                        // Fullscreen button
                         Container(
                           margin: const EdgeInsets.only(right: 8),
                           padding: const EdgeInsets.all(8),
@@ -240,14 +240,14 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
                             child: VideoPlayer(_videoPlayerController),
                           ),
                           
-                          // Điều khiển
+                          // Controls
                           if (_showControls)
                             Container(
                               color: Colors.black.withOpacity(0.5),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  // Nút phát/dừng
+                                  // Play/pause button
                                   IconButton(
                                     icon: Icon(
                                       _isPlaying ? Icons.pause : Icons.play_arrow,
@@ -260,7 +260,7 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
                               ),
                             ),
                           
-                          // Thanh tiến trình
+                          // Progress bar
                           Positioned(
                             bottom: 0,
                             left: 0,
@@ -271,7 +271,7 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  // Thanh trượt tiến trình
+                                  // Progress slider
                                   SliderTheme(
                                     data: SliderTheme.of(context).copyWith(
                                       activeTrackColor: const Color(0xff215273),
@@ -289,7 +289,7 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
                                     ),
                                   ),
                                   
-                                  // Thời gian hiện tại / tổng thời gian
+                                  // Current time / total time
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
@@ -308,7 +308,7 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
                             ),
                           ),
                           
-                          // Nút toàn màn hình khi ở chế độ toàn màn hình
+                          // Fullscreen button when in fullscreen mode
                           if (_isFullScreen && _showControls)
                             Positioned(
                               top: 16,
