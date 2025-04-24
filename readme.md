@@ -1,10 +1,13 @@
 # Learn2Aid - Empowering Lifesavers
 
 ## Introduction
+<img align="right" src="app-logo2.png" alt="Learn2aid logo" width="300">
 
 - Learn2Aid is a cutting-edge mobile application developed by the University of Information Technology in Vietnam. In response to the urgent need for first aid knowledge, especially in busy and bustling cities across the APAC region, Learn2Aid aims to bridge the gap between bystanders and trained first responders. Emergencies happen every day, and many people are unprepared to help when it counts the most. Our solution empowers users to act with confidence, turning everyday people into lifesavers.
 
 - Leveraging AI technology, Learn2Aid makes learning first aid easy, interactive, and accessible for everyone. Whether you're at home, at work, or on the go, you can learn life-saving skills at your own pace. From practical video guides to real-time feedback through AI practice, we provide a seamless and engaging experience that helps users develop the skills needed to confidently respond in critical situations.
+
+
 
 ## Aim
 
